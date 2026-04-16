@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin — Presença Viva</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{--gold:#c9a84c;--gold-light:#e8cc7e;--gold-dark:#8a6a1e;--dark:#0a0d14;--dark2:#111520;--dark3:#181e2e;--dark4:#222840;--text:#e8e0d0;--text-muted:#a09070;--text-dim:#5a5040;--green:#4a8c6a;--red:#9c4a5a;--r:10px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+  
+  /* LAYOUT */
+  .admin-header{background:var(--dark2);border-bottom:1px solid rgba(201,168,76,.15);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .admin-logo{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-light);display:flex;align-items:center;gap:8px}
+  .admin-badge{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.72rem;padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:.06em}
+  .admin-body{padding:28px 24px;max-width:1200px;margin:0 auto}
+  
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+  .stat-card{background:var(--dark2);border:1px solid rgba(201,168,76,.1);border-radius:var(--r);padding:20px;text-align:center}
+  .stat-number{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold-light);margin-bottom:4px}
+  .stat-label{font-size:.78rem;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase}
+  
+  /* PANELS */
+  .panel{background:var(--dark2);border:1px solid rgba(201,168,76,.1);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+  .panel-header{padding:16px 20px;border-bottom:1px solid var(--dark4);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .panel-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold-light);letter-spacing:.05em}
+  .panel-body{padding:20px}
+  
+  /* TABLE */
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  th{text-align:left;padding:10px 12px;font-size:.72rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--dark4);font-weight:700}
+  td{padding:12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+  tr:hover td{background:rgba(201,168,76,.03)}
+  .status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+  .status-active{background:rgba(74,140,106,.15);color:#7dc49a;border:1px solid rgba(74,140,106,.3)}
+  .status-inactive{background:rgba(156,90,106,.15);color:#e0909a;border:1px solid rgba(156,90,106,.3)}
+  .status-pending{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.25)}
+  .plan-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+  
+  /* BUTTONS */
+  .btn{border:none;border-radius:7px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;transition:all .2s;white-space:nowrap}
+  .btn-green{background:rgba(74,140,106,.15);color:#7dc49a;border:1px solid rgba(74,140,106,.3)}
+  .btn-green:hover{background:rgba(74,140,106,.3)}
+  .btn-red{background:rgba(156,90,106,.15);color:#e0909a;border:1px solid rgba(156,90,106,.3)}
+  .btn-red:hover{background:rgba(156,90,106,.3)}
+  .btn-gold{background:var(--gold);color:var(--dark);border:none;font-size:.88rem;padding:10px 18px;border-radius:var(--r)}
+  .btn-gold:hover{background:var(--gold-light)}
+  
+  /* FORM */
+  .add-form{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .form-group{display:flex;flex-direction:column;gap:5px}
+  label.form-label{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  input.form-input,select.form-input{background:var(--dark3);border:1.5px solid var(--dark4);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.88rem;font-family:'Lato',sans-serif;outline:none;transition:border .2s;min-width:180px}
+  input.form-input:focus,select.form-input:focus{border-color:var(--gold)}
+  
+  /* SEARCH */
+  .search-bar{background:var(--dark3);border:1.5px solid var(--dark4);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.88rem;font-family:'Lato',sans-serif;outline:none;width:240px;transition:border .2s}
+  .search-bar:focus{border-color:var(--gold)}
+  
+  /* ALERTS */
+  .alert{padding:12px 16px;border-radius:8px;font-size:.88rem;margin-bottom:14px;display:none}
+  .alert-success{background:rgba(74,140,106,.15);border:1px solid rgba(74,140,106,.3);color:#7dc49a}
+  .alert-error{background:rgba(156,90,106,.15);border:1px solid rgba(156,90,106,.3);color:#e0909a}
+  
+  /* LOADING */
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  
+  /* EMPTY */
+  .empty-row td{text-align:center;padding:32px;color:var(--text-dim);font-size:.88rem}
+  
+  @media(max-width:600px){.add-form{flex-direction:column}.add-form input,.add-form select{width:100%;min-width:0}}
+</style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-logo">
+    ✦ Presença Viva
+    <span class="admin-badge">ADMIN</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:.82rem;color:var(--text-muted)" id="admin-name">—</span>
+    <button class="btn btn-red" onclick="doLogout()">Sair</button>
+    <a href="app.html" class="btn btn-gold" style="text-decoration:none">Abrir App</a>
+  </div>
+</header>
+
+<div class="admin-body">
+
+  <!-- STATS -->
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="stat-number" id="stat-total">—</div><div class="stat-label">Total de Usuários</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-active">—</div><div class="stat-label">Ativos</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-inactive">—</div><div class="stat-label">Bloqueados</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-pending">—</div><div class="stat-label">Aguardando Ativação</div></div>
+  </div>
+
+  <!-- ADD USER -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">➕ Liberar Acesso Manualmente</span>
+    </div>
+    <div class="panel-body">
+      <div id="alert-add" class="alert"></div>
+      <div class="add-form">
+        <div class="form-group">
+          <label class="form-label">Email do usuário</label>
+          <input type="email" class="form-input" id="new-email" placeholder="usuario@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Plano</label>
+          <select class="form-input" id="new-plan">
+            <option value="monthly">Mensal</option>
+            <option value="annual">Anual</option>
+            <option value="lifetime">Vitalício</option>
+            <option value="trial">Trial (7 dias)</option>
+            <option value="manual">Manual / Cortesia</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Validade (opcional)</label>
+          <input type="date" class="form-input" id="new-expires" style="min-width:160px">
+        </div>
+        <div class="form-group" style="justify-content:flex-end">
+          <button class="btn btn-gold" onclick="grantAccess()">✓ Liberar Acesso</button>
+        </div>
+      </div>
+      <p style="font-size:.78rem;color:var(--text-dim);margin-top:10px">💡 O usuário precisará criar uma conta com este email na página de login para acessar o app.</p>
+    </div>
+  </div>
+
+  <!-- USERS TABLE -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">👥 Usuários com Acesso</span>
+      <input type="text" class="search-bar" id="search-input" placeholder="Buscar por email..." oninput="filterUsers(this.value)">
+    </div>
+    <div class="panel-body" style="padding:0">
+      <div id="alert-users" class="alert" style="margin:16px 16px 0"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Plano</th>
+              <th>Status</th>
+              <th>Criado em</th>
+              <th>Expira em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr class="empty-row"><td colspan="6"><span class="spinner"></span> Carregando usuários...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION REQUESTS -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">🔔 Novos Cadastros (aguardando ativação)</span>
+      <button class="btn btn-green" onclick="loadPendingUsers()">↺ Atualizar</button>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Nome</th>
+              <th>Plano Solicitado</th>
+              <th>Cadastrado em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="pending-tbody">
+            <tr class="empty-row"><td colspan="5"><span class="spinner"></span> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURAÇÃO — substitua pelos seus valores
+// ══════════════════════════════════════════
+const SUPABASE_URL = 'https://SEU_PROJETO.supabase.co';
+const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+const ADMIN_EMAIL = 'seu@email.com';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allUsers = [];
+
+// ── INIT ──
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session || session.user.email !== ADMIN_EMAIL) {
+    alert('Acesso negado. Apenas o administrador pode acessar este painel.');
+    window.location.href = 'app.html';
+    return;
+  }
+  document.getElementById('admin-name').textContent = session.user.email;
+  await Promise.all([loadUsers(), loadPendingUsers()]);
+}
+
+// ── LOAD USERS ──
+async function loadUsers() {
+  const { data, error } = await supabase
+    .from('users_access')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error(error); return; }
+  allUsers = data || [];
+  renderUsers(allUsers);
+  updateStats(allUsers);
+}
+
+function updateStats(users) {
+  document.getElementById('stat-total').textContent = users.length;
+  document.getElementById('stat-active').textContent = users.filter(u => u.is_active).length;
+  document.getElementById('stat-inactive').textContent = users.filter(u => !u.is_active).length;
+}
+
+function renderUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (users.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Nenhum usuário encontrado.</td></tr>';
+    return;
+  }
+  const planLabels = { monthly: 'Mensal', annual: 'Anual', lifetime: 'Vitalício', trial: 'Trial', manual: 'Cortesia' };
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>${u.email}</td>
+      <td><span class="plan-badge">${planLabels[u.plan] || u.plan || '—'}</span></td>
+      <td><span class="status-badge ${u.is_active ? 'status-active' : 'status-inactive'}">${u.is_active ? '● Ativo' : '○ Bloqueado'}</span></td>
+      <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('pt-BR') : '—'}</td>
+      <td>${u.expires_at ? new Date(u.expires_at).toLocaleDateString('pt-BR') : '♾️ Sem expiração'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${u.is_active
+          ? `<button class="btn btn-red" onclick="toggleAccess('${u.id}', '${u.email}', false)">Bloquear</button>`
+          : `<button class="btn btn-green" onclick="toggleAccess('${u.id}', '${u.email}', true)">Ativar</button>`
+        }
+        <button class="btn btn-red" onclick="deleteUser('${u.id}', '${u.email}')">Remover</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterUsers(query) {
+  const filtered = allUsers.filter(u => u.email.toLowerCase().includes(query.toLowerCase()));
+  renderUsers(filtered);
+}
+
+// ── LOAD PENDING (new registrations without access yet) ──
+async function loadPendingUsers() {
+  // Users who registered but don't have access granted yet
+  const { data: authUsers, error } = await supabase.auth.admin.listUsers();
+
+  if (error) {
+    // If no admin access, show message
+    document.getElementById('pending-tbody').innerHTML =
+      '<tr class="empty-row"><td colspan="5">Para ver novos cadastros, configure a Service Role Key no Supabase.</td></tr>';
+    return;
+  }
+
+  const accessEmails = new Set(allUsers.map(u => u.email));
+  const pending = (authUsers.users || []).filter(u => !accessEmails.has(u.email));
+
+  const tbody = document.getElementById('pending-tbody');
+  if (pending.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Nenhum cadastro pendente.</td></tr>';
+    document.getElementById('stat-pending').textContent = '0';
+    return;
+  }
+  document.getElementById('stat-pending').textContent = pending.length;
+  tbody.innerHTML = pending.map(u => `
+    <tr>
+      <td>${u.email}</td>
+      <td>${u.user_metadata?.name || '—'}</td>
+      <td><span class="plan-badge">${u.user_metadata?.plan || 'sem plano'}</span></td>
+      <td>${new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
+      <td>
+        <button class="btn btn-green" onclick="quickActivate('${u.email}', '${u.user_metadata?.plan || 'manual'}')">✓ Ativar</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── GRANT ACCESS ──
+async function grantAccess() {
+  const email = document.getElementById('new-email').value.trim();
+  const plan = document.getElementById('new-plan').value;
+  const expires = document.getElementById('new-expires').value;
+  if (!email) { showAlert('alert-add', 'Digite o email do usuário.', 'error'); return; }
+
+  const { error } = await supabase.from('users_access').upsert({
+    email,
+    plan,
+    is_active: true,
+    expires_at: expires || null,
+    granted_by: ADMIN_EMAIL,
+    created_at: new Date().toISOString()
+  }, { onConflict: 'email' });
+
+  if (error) { showAlert('alert-add', 'Erro: ' + error.message, 'error'); return; }
+
+  showAlert('alert-add', `✓ Acesso liberado para ${email}!`, 'success');
+  document.getElementById('new-email').value = '';
+  document.getElementById('new-expires').value = '';
+  await loadUsers();
+}
+
+async function quickActivate(email, plan) {
+  document.getElementById('new-email').value = email;
+  document.getElementById('new-plan').value = plan || 'manual';
+  await grantAccess();
+  await loadPendingUsers();
+}
+
+// ── TOGGLE ACCESS ──
+async function toggleAccess(id, email, active) {
+  const action = active ? 'ativar' : 'bloquear';
+  if (!confirm(`Tem certeza que deseja ${action} o acesso de ${email}?`)) return;
+
+  const { error } = await supabase
+    .from('users_access')
+    .update({ is_active: active })
+    .eq('id', id);
+
+  if (error) { showAlert('alert-users', 'Erro: ' + error.message, 'error'); return; }
+
+  showAlert('alert-users', `✓ Acesso de ${email} ${active ? 'ativado' : 'bloqueado'}.`, 'success');
+  await loadUsers();
+}
+
+// ── DELETE ──
+async function deleteUser(id, email) {
+  if (!confirm(`Remover PERMANENTEMENTE o acesso de ${email}?`)) return;
+
+  const { error } = await supabase.from('users_access').delete().eq('id', id);
+  if (error) { showAlert('alert-users', 'Erro: ' + error.message, 'error'); return; }
+
+  showAlert('alert-users', `✓ Acesso de ${email} removido.`, 'success');
+  await loadUsers();
+}
+
+// ── UTILS ──
+function showAlert(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'alert alert-' + type;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+async function doLogout() {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
+
+// Iniciar
+init();
+</script>
+</body>
+</html>

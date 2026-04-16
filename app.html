@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presença Viva — App</title>
+<meta name="theme-color" content="#0d1117">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root { --gold: #c9a84c; --dark: #0a0d14; --dark2: #111520; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--dark); color: #e8e0d0; }
+
+  /* AUTH GATE */
+  #auth-gate {
+    position: fixed; inset: 0; background: var(--dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 9999; gap: 16px;
+  }
+  .gate-cross { width: 40px; height: 48px; position: relative; }
+  .gate-cross::before { content: ''; position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 5px; height: 100%; background: var(--gold); border-radius: 3px; }
+  .gate-cross::after { content: ''; position: absolute; left: 0; top: 14px; width: 100%; height: 5px; background: var(--gold); border-radius: 3px; }
+  .gate-loading { width: 32px; height: 32px; border: 3px solid rgba(201,168,76,.2); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
+  .gate-text { font-size: .88rem; color: rgba(201,168,76,.6); letter-spacing: .08em; text-transform: uppercase; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* BLOCKED STATE */
+  #blocked-screen {
+    position: fixed; inset: 0; background: var(--dark);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 9999; padding: 24px; text-align: center;
+  }
+  .blocked-box { background: var(--dark2); border: 1px solid rgba(201,168,76,.2); border-radius: 16px; padding: 40px 28px; max-width: 380px; }
+  .blocked-icon { font-size: 3rem; margin-bottom: 16px; }
+  .blocked-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--gold); margin-bottom: 12px; }
+  .blocked-text { font-size: .9rem; color: #a09070; line-height: 1.7; margin-bottom: 24px; }
+  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: 10px; padding: 14px 28px; font-size: .95rem; font-weight: 700; cursor: pointer; width: 100%; transition: all .2s; text-decoration: none; display: block; }
+  .btn-gold:hover { background: #e8cc7e; }
+  .btn-outline { background: transparent; border: 1.5px solid rgba(201,168,76,.3); color: var(--gold); border-radius: 10px; padding: 12px 28px; font-size: .9rem; cursor: pointer; width: 100%; margin-top: 10px; transition: all .2s; font-family: 'Lato', sans-serif; }
+  .btn-outline:hover { border-color: var(--gold); }
+
+  /* APP FRAME */
+  #app-frame { width: 100%; height: 100vh; border: none; display: none; }
+
+  /* USER BAR */
+  #user-bar {
+    position: fixed; top: 0; right: 0; z-index: 200;
+    background: rgba(10,13,20,.95); backdrop-filter: blur(8px);
+    border-bottom-left-radius: 10px; border-left: 1px solid rgba(201,168,76,.1);
+    border-bottom: 1px solid rgba(201,168,76,.1);
+    padding: 8px 14px; display: none; align-items: center; gap: 10px;
+  }
+  .user-name { font-size: .78rem; color: #a09070; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .btn-logout { background: transparent; border: 1px solid rgba(201,168,76,.2); color: var(--gold); border-radius: 6px; padding: 5px 10px; font-size: .72rem; cursor: pointer; font-family: 'Lato', sans-serif; transition: all .2s; }
+  .btn-logout:hover { border-color: var(--gold); background: rgba(201,168,76,.08); }
+</style>
+</head>
+<body>
+
+<!-- AUTH LOADING -->
+<div id="auth-gate">
+  <div class="gate-cross"></div>
+  <div class="gate-loading"></div>
+  <div class="gate-text">Verificando acesso...</div>
+</div>
+
+<!-- BLOCKED -->
+<div id="blocked-screen">
+  <div class="blocked-box">
+    <div class="blocked-icon">🔐</div>
+    <div class="blocked-title">Acesso Restrito</div>
+    <div class="blocked-text" id="blocked-text">Você precisa de um plano ativo para acessar o Presença Viva.</div>
+    <a href="index.html#pricing" class="btn-gold">Ver Planos</a>
+    <button class="btn-outline" onclick="doLogout()">Sair da conta</button>
+  </div>
+</div>
+
+<!-- USER BAR -->
+<div id="user-bar">
+  <span class="user-name" id="user-name-display">—</span>
+  <button class="btn-logout" onclick="doLogout()">Sair</button>
+</div>
+
+<!-- APP (loaded dynamically) -->
+<div id="app-container"></div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURAÇÃO — substitua pelos seus valores
+// ══════════════════════════════════════════
+const SUPABASE_URL = 'https://SEU_PROJETO.supabase.co';
+const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+// Email do administrador (você)
+const ADMIN_EMAIL = 'seu@email.com';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function checkAccess() {
+  // 1. Verificar se está logado
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    // Não logado — redirecionar para login
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const user = session.user;
+  const email = user.email;
+  const name = user.user_metadata?.name || email.split('@')[0];
+
+  // 2. Verificar se tem acesso ativo na tabela 'users_access'
+  const { data: access, error } = await supabase
+    .from('users_access')
+    .select('*')
+    .eq('user_id', user.id)
+    .single();
+
+  const isAdmin = email === ADMIN_EMAIL;
+
+  if (!isAdmin && (!access || !access.is_active)) {
+    // Sem acesso — mostrar tela bloqueada
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('blocked-screen').style.display = 'flex';
+    if (access && access.blocked_reason) {
+      document.getElementById('blocked-text').textContent = access.blocked_reason;
+    }
+    return;
+  }
+
+  // 3. Acesso liberado — carregar o app
+  document.getElementById('auth-gate').style.display = 'none';
+
+  // Mostrar barra do usuário
+  const bar = document.getElementById('user-bar');
+  document.getElementById('user-name-display').textContent = name;
+  bar.style.display = 'flex';
+
+  // Se for admin, adicionar link para painel
+  if (isAdmin) {
+    const adminLink = document.createElement('a');
+    adminLink.href = 'admin.html';
+    adminLink.style.cssText = 'font-size:.72rem;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:5px 10px;';
+    adminLink.textContent = 'Admin';
+    bar.insertBefore(adminLink, bar.firstChild);
+  }
+
+  // Carregar o app principal injetando o HTML
+  loadApp(user, name, isAdmin);
+}
+
+async function loadApp(user, name, isAdmin) {
+  // Buscar o conteúdo do arquivo presenca-viva-v2.html via fetch
+  // Em produção, esse arquivo estará na pasta pública do projeto
+  try {
+    const response = await fetch('presenca-viva-app.html');
+    const html = await response.text();
+
+    // Criar iframe seguro com o conteúdo
+    const container = document.getElementById('app-container');
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'width:100%;height:100vh;border:none;display:block;';
+    iframe.id = 'app-frame';
+    container.appendChild(iframe);
+
+    // Injetar HTML no iframe com dados do usuário
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    // Inject user data into the app
+    const injectedHtml = html.replace(
+      '// ════════════════ BOOT ════════════════',
+      `// Dados do usuário injetados pelo wrapper
+      window.PV_USER = { id: '${user.id}', name: '${name}', email: '${user.email}', isAdmin: ${isAdmin} };
+      // ════════════════ BOOT ════════════════`
+    );
+    doc.write(injectedHtml);
+    doc.close();
+  } catch(e) {
+    // Fallback: redirecionar direto para o app
+    console.error('Erro ao carregar app:', e);
+    document.getElementById('app-container').innerHTML =
+      '<p style="text-align:center;padding:40px;color:#a09070">Erro ao carregar o app. <a href="login.html" style="color:#c9a84c">Tentar novamente</a></p>';
+  }
+}
+
+async function doLogout() {
+  await supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
+
+// Inicializar
+checkAccess();
+</script>
+</body>
+</html>
