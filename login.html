@@ -18,8 +18,8 @@
   .cross::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:5px;height:100%;background:var(--gold);border-radius:3px}
   .cross::after{content:'';position:absolute;left:0;top:12px;width:100%;height:5px;background:var(--gold);border-radius:3px}
   .logo h1{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-light);letter-spacing:.05em}
-  .tabs{display:flex;background:var(--dark3);border-radius:10px;padding:4px;margin-bottom:28px}
-  .tab{flex:1;padding:10px;text-align:center;font-size:.88rem;font-family:'Lato',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--text-muted);border-radius:8px;transition:all .2s;font-weight:600}
+  .tabs{display:flex;background:var(--dark3);border-radius:10px;padding:4px;margin-bottom:28px;position:relative;z-index:10}
+  .tab{flex:1;padding:10px;text-align:center;font-size:.88rem;font-family:'Lato',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--text-muted);border-radius:8px;transition:all .2s;font-weight:600;pointer-events:auto;position:relative;z-index:10}
   .tab.active{background:rgba(201,168,76,.15);color:var(--gold)}
   .form-group{margin-bottom:16px}
   label{display:block;font-size:.78rem;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;font-weight:700}
@@ -72,7 +72,7 @@
   <div id="form-login">
     <div class="form-group">
       <label>Email</label>
-      <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+      <input type="email" id="login-email" placeholder="suporte.ekklesia360@gmail.com" autocomplete="email">
     </div>
     <div class="form-group">
       <label>Senha</label>
@@ -95,7 +95,7 @@
     </div>
     <div class="form-group">
       <label>Email</label>
-      <input type="email" id="reg-email" placeholder="seu@email.com" autocomplete="email">
+      <input type="email" id="reg-email" placeholder="suporte.ekklesia360@gmail.com" autocomplete="email">
     </div>
     <div class="form-group">
       <label>Senha</label>
@@ -119,8 +119,8 @@
 // CONFIGURAÇÃO SUPABASE
 // Substitua pelos seus valores do Supabase
 // ══════════════════════════════════════════
-const SUPABASE_URL = 'https://SEU_PROJETO.supabase.co';
-const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+const SUPABASE_URL = 'https://kuziamankscrzbplcqjr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ZZgk4sBfLlD5KmNt-gl36Q_tJsVwA_Q';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Detectar plano da URL
