@@ -93,11 +93,11 @@ const SUPABASE_ANON_KEY = 'sb_publishable_ZZgk4sBfLlD5KmNt-gl36Q_tJsVwA_Q';
 // Email do administrador (você)
 const ADMIN_EMAIL = 'suporte.ekklesia360@gmail.com';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function checkAccess() {
   // 1. Verificar se está logado
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
     window.location.href = 'login.html';
@@ -182,7 +182,7 @@ async function loadApp(user, name, isAdmin) {
 }
 
 async function doLogout() {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   window.location.href = 'login.html';
 }
 
