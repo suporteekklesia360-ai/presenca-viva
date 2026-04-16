@@ -88,19 +88,18 @@
 // ══════════════════════════════════════════
 // CONFIGURAÇÃO — substitua pelos seus valores
 // ══════════════════════════════════════════
-const SUPABASE_URL = 'https://SEU_PROJETO.supabase.co';
-const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+const SUPABASE_URL = 'https://kuziamankscrzbplcqjr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ZZgk4sBfLlD5KmNt-gl36Q_tJsVwA_Q';
 // Email do administrador (você)
-const ADMIN_EMAIL = 'seu@email.com';
+const ADMIN_EMAIL = 'suporte.ekklesia360@gmail.com';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function checkAccess() {
   // 1. Verificar se está logado
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
-    // Não logado — redirecionar para login
     window.location.href = 'login.html';
     return;
   }
@@ -108,24 +107,23 @@ async function checkAccess() {
   const user = session.user;
   const email = user.email;
   const name = user.user_metadata?.name || email.split('@')[0];
-
-  // 2. Verificar se tem acesso ativo na tabela 'users_access'
-  const { data: access, error } = await supabase
-    .from('users_access')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
-
   const isAdmin = email === ADMIN_EMAIL;
 
-  if (!isAdmin && (!access || !access.is_active)) {
-    // Sem acesso — mostrar tela bloqueada
-    document.getElementById('auth-gate').style.display = 'none';
-    document.getElementById('blocked-screen').style.display = 'flex';
-    if (access && access.blocked_reason) {
-      document.getElementById('blocked-text').textContent = access.blocked_reason;
+  // 2. Admin sempre tem acesso — pula verificação do banco
+  if (!isAdmin) {
+    // Buscar acesso por EMAIL (mais confiável que user_id)
+    const { data: access } = await supabase
+      .from('users_access')
+      .select('*')
+      .eq('email', email)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    if (!access) {
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('blocked-screen').style.display = 'flex';
+      return;
     }
-    return;
   }
 
   // 3. Acesso liberado — carregar o app
@@ -184,7 +182,7 @@ async function loadApp(user, name, isAdmin) {
 }
 
 async function doLogout() {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   window.location.href = 'login.html';
 }
 
