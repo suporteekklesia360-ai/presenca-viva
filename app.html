@@ -1887,26 +1887,96 @@ const DAILY_CONFESSIONS = [
   {id:'conf15',text:'Sou templo do Espírito Santo — Deus habita em mim.',ref:'1 Coríntios 6.19-20'},
 ];
 
+// Cache de resumos gerados por IA (para não buscar toda vez)
+if(!window.AI_SUMMARY_CACHE) window.AI_SUMMARY_CACHE={};
+
 function renderBibleSummaryAndChallenge(bookName, chapterNum) {
-  const key = `${bookName}_${chapterNum}`;
+  const key = bookName+'_'+chapterNum;
   const summary = BIBLE_SUMMARIES[key];
-  if (!summary) return '';
   const challengeDone = (ST.bibleChallengesDone||{})[key];
-  return `
-    <div class="bible-summary-box">
-      <div class="bs-label">📚 Resumo e Contexto</div>
-      <div class="bs-text">${summary.summary}</div>
-      <div class="bs-theme">✦ ${summary.theme}</div>
-    </div>
-    <div class="bible-challenge-box">
-      <div class="bc-label">⚡ Desafio deste capítulo</div>
-      <div class="bc-challenge">${summary.challenge}</div>
-      <button class="bc-btn ${challengeDone?'done':''}" onclick="markBibleChallenge('${key}')">
-        ${challengeDone ? '✓ Desafio cumprido!' : 'Marcar desafio como feito (+30 XP)'}
-      </button>
-    </div>
-  `;
+
+  // Se tem resumo local, renderiza direto
+  if (summary) {
+    return '<div class="bible-summary-box">'
+      +'<div class="bs-label">📚 Resumo e Contexto</div>'
+      +'<div class="bs-text">'+summary.summary+'</div>'
+      +'<div class="bs-theme">✦ '+summary.theme+'</div>'
+      +'</div>'
+      +'<div class="bible-challenge-box">'
+      +'<div class="bc-label">⚡ Desafio deste capítulo</div>'
+      +'<div class="bc-challenge">'+summary.challenge+'</div>'
+      +'<button class="bc-btn '+(challengeDone?'done':'')+'" onclick="markBibleChallenge(\''+key+'\')">'
+      +(challengeDone ? '✓ Desafio cumprido!' : 'Marcar desafio como feito (+30 XP)')
+      +'</button></div>';
+  }
+
+  // Se tem cache de IA, usa o cache
+  if (window.AI_SUMMARY_CACHE[key]) {
+    return renderAISummaryHTML(window.AI_SUMMARY_CACHE[key], key, challengeDone);
+  }
+
+  // Sem resumo local e sem cache — retorna container vazio e busca via IA
+  setTimeout(function(){ fetchAISummary(bookName, chapterNum, key); }, 100);
+  return '<div id="ai-summary-'+key+'" class="bible-summary-box">'
+    +'<div class="bs-label">📚 Resumo e Contexto</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.88rem;">'
+    +'<div style="width:16px;height:16px;border:2px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>'
+    +'Gerando resumo com IA...</div></div>';
 }
+
+async function fetchAISummary(bookName, chapterNum, key) {
+  const el = document.getElementById('ai-summary-'+key);
+  try {
+    // Chama a função segura da Vercel (chave protegida no servidor)
+    const resp = await fetch('/api/resumo', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ book: bookName, chapter: chapterNum })
+    });
+    if (!resp.ok) throw new Error('Erro '+resp.status);
+    const parsed = await resp.json();
+    window.AI_SUMMARY_CACHE[key] = parsed;
+    const challengeDone = (ST.bibleChallengesDone||{})[key];
+    if (el) el.outerHTML = renderAISummaryHTML(parsed, key, challengeDone);
+    // Renderiza o desafio
+    if (parsed.challenge) {
+      const div = document.createElement('div');
+      div.innerHTML = '<div class="bible-challenge-box">'
+        +'<div class="bc-label">⚡ Desafio deste capítulo</div>'
+        +'<div class="bc-challenge">'+parsed.challenge+'</div>'
+        +'<button class="bc-btn '+(challengeDone?'done':'')+'" id="ai-challenge-'+key+'" onclick="markBibleChallenge(\''+key+'\')">'
+        +(challengeDone?'✓ Desafio cumprido!':'Marcar desafio como feito (+30 XP)')
+        +'</button></div>';
+      const summaryEl = document.getElementById('ai-summary-'+key);
+      if (summaryEl && summaryEl.parentNode) {
+        summaryEl.parentNode.insertBefore(div, summaryEl.nextSibling);
+      }
+    }
+    // Renderiza comentário de Deus se tiver
+    if (parsed.god_comment && parsed.god_comment.text) {
+      const gc = parsed.god_comment;
+      const gcDiv = document.createElement('div');
+      gcDiv.className = 'god-comment';
+      gcDiv.innerHTML = '<div class="god-comment-label">✦ Deus fala sobre este capítulo</div><p>'+gc.text+'</p>';
+      const challengeEl = document.getElementById('ai-challenge-'+key);
+      if (challengeEl && challengeEl.parentNode) {
+        challengeEl.parentNode.insertBefore(gcDiv, challengeEl.nextSibling);
+      }
+    }
+  } catch(e) {
+    if (el) el.innerHTML = '<div class="bs-label">📚 Contexto</div>'
+      +'<div style="font-size:.85rem;color:var(--text-dim)">Resumo indisponível agora. Leia o capítulo e reflita: o que Deus quer falar com você através dele?</div>';
+  }
+}
+
+function renderAISummaryHTML(parsed, key, challengeDone) {
+  return '<div class="bible-summary-box" id="ai-summary-'+key+'">'
+    +'<div class="bs-label">📚 Resumo e Contexto <span style="font-size:.65rem;color:var(--text-dim);margin-left:6px">✦ gerado por IA</span></div>'
+    +'<div class="bs-text">'+(parsed.summary||'')+'</div>'
+    +'<div class="bs-theme">✦ '+(parsed.theme||'')+'</div>'
+    +'</div>';
+}
+
 function markBibleChallenge(key) {
   if (!ST.bibleChallengesDone) ST.bibleChallengesDone = {};
   if (ST.bibleChallengesDone[key]) return;
@@ -1916,25 +1986,10 @@ function markBibleChallenge(key) {
   loadChapter();
 }
 
-// Daily confessions box
+// Declarações removidas da Bíblia — agora ficam só nos devocionais
 function renderConfessionBox(containerId) {
-  const el = document.getElementById(containerId); if (!el) return;
-  el.innerHTML = `
-    <div class="confession-box">
-      <div class="confession-title">✦ Declarações de Identidade — Quem você É em Cristo</div>
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">Toque em cada verdade para declará-la. Você vive na dispensação da graça — não há condenação para você!</p>
-      ${DAILY_CONFESSIONS.map(c => {
-        const declared = (ST.confessionsDeclared||[]).includes(c.id);
-        return `<div class="confession-item ${declared?'declared':''}" onclick="toggleConfession('${c.id}',this)">
-          <div class="conf-check"></div>
-          <div>
-            <div style="font-size:.9rem;color:${declared?'#7dc49a':'var(--text)'}">"${c.text}"</div>
-            <div style="font-size:.75rem;color:var(--text-dim);margin-top:3px">${c.ref}</div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
+  // Não renderiza mais na Bíblia
+  return;
 }
 function toggleConfession(id, el) {
   if (!ST.confessionsDeclared) ST.confessionsDeclared = [];
