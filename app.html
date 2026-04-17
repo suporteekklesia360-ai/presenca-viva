@@ -45,13 +45,41 @@ textarea.ob-ta{min-height:100px;resize:vertical}
 .app-logo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-light);letter-spacing:.05em}
 .xp-badge{background:rgba(201,168,76,.15);border:1px solid var(--gold-dark);border-radius:20px;padding:4px 12px;font-size:.8rem;color:var(--gold);font-weight:700}
 .level-badge{background:var(--gold);color:var(--dark);border-radius:20px;padding:4px 10px;font-size:.8rem;font-weight:700;font-family:'Cinzel',serif}
-.app-content{flex:1;overflow-y:auto;padding-bottom:80px}
-/* NAV */
-.app-nav{position:fixed;bottom:0;left:0;right:0;background:var(--dark2);border-top:1px solid var(--dark4);display:flex;z-index:100;overflow-x:auto}
-.nav-item{flex:1;min-width:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 4px;cursor:pointer;transition:all .2s;border:none;background:none;color:var(--text-dim)}
+.app-content{flex:1;overflow-y:auto;padding-bottom:20px}
+/* HAMBURGER */
+.hamburger{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px;z-index:201}
+.hamburger span{display:block;width:22px;height:2px;background:var(--gold-light);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+/* SIDEBAR OVERLAY */
+#sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;display:none;backdrop-filter:blur(2px)}
+#sidebar-overlay.open{display:block}
+/* SIDEBAR DRAWER */
+#sidebar{position:fixed;top:0;left:-300px;width:280px;height:100vh;background:var(--dark2);border-right:1px solid rgba(201,168,76,.15);z-index:200;transition:left .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+#sidebar.open{left:0}
+.sb-header{padding:20px 20px 16px;border-bottom:1px solid var(--dark4);display:flex;align-items:center;gap:12px}
+.sb-cross{width:24px;height:30px;position:relative;flex-shrink:0}
+.sb-cross::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:4px;height:100%;background:var(--gold);border-radius:2px}
+.sb-cross::after{content:'';position:absolute;left:0;top:9px;width:100%;height:4px;background:var(--gold);border-radius:2px}
+.sb-title{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-light)}
+.sb-user{padding:14px 20px;border-bottom:1px solid var(--dark4);background:rgba(201,168,76,.04)}
+.sb-user-name{font-size:.95rem;color:var(--text);font-weight:700;margin-bottom:2px}
+.sb-user-level{font-size:.78rem;color:var(--gold)}
+.sb-section{padding:10px 20px 4px;font-size:.65rem;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-top:6px}
+.sb-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;color:var(--text-muted);font-family:'Lato',sans-serif;font-size:.92rem}
+.sb-item:hover,.sb-item.active{background:rgba(201,168,76,.08);color:var(--gold-light)}
+.sb-item.active{border-left:3px solid var(--gold)}
+.sb-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--gold);color:var(--dark);font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px}
+.sb-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--dark4)}
+.sb-verse{font-style:italic;font-size:.78rem;color:var(--text-dim);line-height:1.6;text-align:center}
+/* BOTTOM BAR — only 4 main items */
+.app-nav{position:fixed;bottom:0;left:0;right:0;background:var(--dark2);border-top:1px solid var(--dark4);display:flex;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 4px;cursor:pointer;transition:all .2s;border:none;background:none;color:var(--text-dim)}
 .nav-item.active{color:var(--gold)}
-.nav-icon{font-size:18px}
-.nav-label{font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-family:'Lato',sans-serif;white-space:nowrap}
+.nav-icon{font-size:20px}
+.nav-label{font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;font-family:'Lato',sans-serif}
 /* SCREENS */
 .screen{display:none;padding:20px 16px;animation:fadeUp .3s ease}
 .screen.active{display:block}
@@ -238,7 +266,37 @@ select.form-input option{background:var(--dark2)}
 .btn-sm:hover{border-color:var(--gold);color:var(--gold)}
 .btn-sm.green:hover{border-color:var(--green-soft);color:var(--green-soft)}
 .btn-sm.active-green{background:rgba(74,140,106,.1);border-color:var(--green-soft);color:var(--green-soft)}
-/* MOOD */
+/* PALAVRA DO DIA / INTERCESSÃO */
+.palavra-card{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(122,90,156,.06));border:1px solid rgba(201,168,76,.2);border-radius:var(--r);padding:20px;position:relative;overflow:hidden}
+.palavra-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(201,168,76,.12),transparent);border-radius:50%}
+.palavra-label{font-size:.68rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:10px}
+.palavra-text{font-style:italic;font-size:.95rem;color:var(--text);line-height:1.75;margin-bottom:8px}
+.palavra-ref{font-size:.78rem;color:var(--gold-dark);font-family:'Cinzel',serif}
+/* RELATÓRIO */
+.report-card{background:var(--dark2);border:1px solid rgba(201,168,76,.2);border-radius:var(--r);padding:20px}
+.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.report-stat{background:var(--dark3);border-radius:10px;padding:12px;text-align:center}
+.report-num{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold-light)}
+.report-label{font-size:.68rem;color:var(--text-muted);margin-top:2px}
+/* INTERCESSÃO */
+.intercession-card{background:rgba(122,90,156,.07);border:1px solid rgba(122,90,156,.2);border-radius:var(--r);padding:18px}
+/* GOD SPEAKS floating */
+.god-whisper{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(10,13,20,.95);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 18px;max-width:320px;width:90%;z-index:500;animation:fadeUp .4s ease;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.god-whisper-label{font-size:.65rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.god-whisper-text{font-size:.85rem;color:var(--text);line-height:1.6;font-style:italic}
+.god-whisper-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.9rem;padding:2px 6px}
+/* MUSIC SUGGESTION */
+.music-suggestion{background:rgba(122,90,156,.08);border:1px solid rgba(122,90,156,.2);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.music-label{font-size:.72rem;color:#b08ad0;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+/* SPIRITUAL AGENDA */
+.agenda-item{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.agenda-date{background:var(--gold);color:var(--dark);border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;min-width:48px}
+.agenda-day{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;line-height:1}
+.agenda-month{font-size:.6rem;text-transform:uppercase;letter-spacing:.05em}
+/* PARTICLES */
+@keyframes particle1{to{transform:translateY(-100px) translateX(50px);opacity:0}}
+@keyframes particle2{to{transform:translateY(-80px) translateX(-60px);opacity:0}}
+@keyframes particle3{to{transform:translateY(-120px) translateX(20px);opacity:0}}
 .mood-btn{background:var(--dark3);border:1px solid var(--dark4);border-radius:10px;padding:8px 12px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .2s;flex:1;min-width:60px}
 .mood-btn span{font-size:.65rem;color:var(--text-dim);letter-spacing:.03em}
 .mood-btn:hover,.mood-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.1)}
@@ -400,7 +458,51 @@ select.form-input option{background:var(--dark2)}
 
 <!-- APP -->
 <div id="app">
+<!-- SIDEBAR OVERLAY -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR DRAWER -->
+<div id="sidebar">
+  <div class="sb-header">
+    <div class="sb-cross"></div>
+    <span class="sb-title">Presença Viva</span>
+  </div>
+  <div class="sb-user">
+    <div class="sb-user-name" id="sb-name">—</div>
+    <div class="sb-user-level" id="sb-level">✦ Nível 1 — Semente de Fé</div>
+  </div>
+
+  <div class="sb-section">Principal</div>
+  <button class="sb-item active" id="sbi-home" onclick="goTo('home');closeSidebar()"><span class="sb-icon">🏠</span>Início</button>
+  <button class="sb-item" id="sbi-bible" onclick="goTo('bible');closeSidebar()"><span class="sb-icon">📖</span>Bíblia Sagrada</button>
+  <button class="sb-item" id="sbi-devot" onclick="goTo('devot');closeSidebar()"><span class="sb-icon">🕊️</span>Devocionais</button>
+  <button class="sb-item" id="sbi-reading" onclick="goTo('reading');closeSidebar()"><span class="sb-icon">📅</span>Plano de Leitura</button>
+  <button class="sb-item" id="sbi-prayer" onclick="goTo('prayer');closeSidebar()"><span class="sb-icon">🙏</span>Diário de Oração</button>
+  <button class="sb-item" id="sbi-godletter" onclick="goTo('godletter');closeSidebar()"><span class="sb-icon">💌</span>Carta de Deus</button>
+
+  <div class="sb-section">Crescimento</div>
+  <button class="sb-item" id="sbi-missions" onclick="goTo('missions');closeSidebar()"><span class="sb-icon">⚔️</span>Missões Espirituais</button>
+  <button class="sb-item" id="sbi-fasting" onclick="goTo('fasting');closeSidebar()"><span class="sb-icon">🌿</span>Jejum & Oração</button>
+  <button class="sb-item" id="sbi-conquests" onclick="goTo('conquests');closeSidebar()"><span class="sb-icon">🏆</span>Conquistas</button>
+  <button class="sb-item" id="sbi-dreams" onclick="goTo('dreams');closeSidebar()"><span class="sb-icon">🌟</span>Sonhos & Alvos</button>
+
+  <div class="sb-section">Família & Ministério</div>
+  <button class="sb-item" id="sbi-relationship" onclick="goTo('relationship');closeSidebar()"><span class="sb-icon">💍</span>Relacionamentos</button>
+  <button class="sb-item" id="sbi-children" onclick="goTo('children');closeSidebar()"><span class="sb-icon">👶</span>Filhos</button>
+  <button class="sb-item" id="sbi-ministry" onclick="goTo('ministry');closeSidebar()"><span class="sb-icon">⛪</span>Ministério & Igreja</button>
+
+  <div class="sb-section">Fidelidade</div>
+  <button class="sb-item" id="sbi-finance" onclick="goTo('finance');closeSidebar()"><span class="sb-icon">💰</span>Mordomia Fiel</button>
+
+  <div class="sb-footer">
+    <div class="sb-verse">"Chegai-vos a Deus, e ele se chegará a vós." — Tiago 4.8</div>
+  </div>
+</div>
+
   <header class="app-header">
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
     <span class="app-logo">✦ Presença Viva</span>
     <div style="display:flex;gap:8px;align-items:center">
       <span class="xp-badge" id="hdr-xp">0 XP</span>
@@ -435,19 +537,31 @@ select.form-input option{background:var(--dark2)}
         <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-muted)"><span id="mc-count">0 missões</span><span id="fd-count">0 dias de jejum</span></div>
       </div>
       <div class="card card-gold" style="margin-bottom:20px"><p style="font-style:italic;font-size:.98rem;color:var(--cream);line-height:1.7;border-left:3px solid var(--gold);padding-left:14px" id="hm-verse">...</p></div>
+
+      <!-- RELATÓRIO ESPIRITUAL -->
+      <div id="monthly-report-card" style="display:none;margin-bottom:20px"></div>
+
+      <!-- PALAVRA DO DIA -->
+      <div id="palavra-do-dia-card" style="margin-bottom:20px"></div>
+
       <p class="section-title">Acesso Rápido</p>
       <div class="quick-grid">
         <div class="quick-card" onclick="goTo('bible')"><span class="quick-icon">📖</span><span class="quick-label">Bíblia</span></div>
+        <div class="quick-card" onclick="goTo('reading')"><span class="quick-icon">📅</span><span class="quick-label">Plano</span></div>
         <div class="quick-card" onclick="goTo('missions')"><span class="quick-icon">⚔️</span><span class="quick-label">Missões</span></div>
         <div class="quick-card" onclick="goTo('fasting')"><span class="quick-icon">🌿</span><span class="quick-label">Jejum</span></div>
         <div class="quick-card" onclick="goTo('devot')"><span class="quick-icon">🕊️</span><span class="quick-label">Devocional</span></div>
-        <div class="quick-card" onclick="goTo('finance')"><span class="quick-icon">💰</span><span class="quick-label">Financeiro</span></div>
+        <div class="quick-card" onclick="goTo('prayer')"><span class="quick-icon">🙏</span><span class="quick-label">Oração</span></div>
+        <div class="quick-card" onclick="goTo('godletter')"><span class="quick-icon">💌</span><span class="quick-label">Carta</span></div>
+        <div class="quick-card" onclick="goTo('finance')"><span class="quick-icon">💰</span><span class="quick-label">Finanças</span></div>
         <div class="quick-card" onclick="goTo('dreams')"><span class="quick-icon">🌟</span><span class="quick-label">Sonhos</span></div>
+        <div class="quick-card" onclick="goTo('relationship')"><span class="quick-icon">💍</span><span class="quick-label">Amor</span></div>
         <div class="quick-card" onclick="goTo('conquests')"><span class="quick-icon">🏆</span><span class="quick-label">Conquistas</span></div>
-        <div class="quick-card" onclick="goTo('promises')"><span class="quick-icon">📜</span><span class="quick-label">Promessas</span></div>
-        <div class="quick-card" onclick="goTo('relationship')"><span class="quick-icon">💍</span><span class="quick-label">Relacionamento</span></div>
-        <div class="quick-card" onclick="goTo('children')"><span class="quick-icon">👶</span><span class="quick-label">Filhos</span></div>
+        <div class="quick-card" onclick="goTo('ministry')"><span class="quick-icon">⛪</span><span class="quick-label">Ministério</span></div>
       </div>
+
+      <!-- INTERCESSÃO DO DIA -->
+      <div style="margin-top:20px" id="intercession-card"></div>
     </div>
 
     <!-- BÍBLIA -->
@@ -711,19 +825,64 @@ select.form-input option{background:var(--dark2)}
       </div>
     </div>
 
+    <!-- PLANO DE LEITURA -->
+    <div class="screen" id="screen-reading">
+      <p class="section-title">📅 Plano de Leitura</p>
+      <div class="god-voice-card" style="margin-bottom:20px" id="reading-god-voice">
+        <div class="god-voice-label">✦ Deus fala antes de você ler</div>
+        <p class="god-voice-text" id="reading-voice-text">Que bom que veio. Estava aqui pensando em você — sente comigo. Tenho tanto para mostrar a você nestas páginas.</p>
+      </div>
+      <div id="reading-plan-selector" style="margin-bottom:20px">
+        <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:14px">Escolha seu plano de leitura:</p>
+        <div style="display:flex;flex-direction:column;gap:10px" id="plan-options">
+          <div class="ob-option" onclick="startReadingPlan('year')">📖 Bíblia em 1 Ano <span style="font-size:.78rem;color:var(--text-dim);display:block">3-4 capítulos por dia</span></div>
+          <div class="ob-option" onclick="startReadingPlan('nt90')">✝️ Novo Testamento em 90 Dias <span style="font-size:.78rem;color:var(--text-dim);display:block">3 capítulos por dia</span></div>
+          <div class="ob-option" onclick="startReadingPlan('psalms30')">🎵 Salmos em 30 Dias <span style="font-size:.78rem;color:var(--text-dim);display:block">5 salmos por dia</span></div>
+          <div class="ob-option" onclick="startReadingPlan('gospels')">🕊️ Os 4 Evangelhos em 40 Dias <span style="font-size:.78rem;color:var(--text-dim);display:block">2-3 capítulos por dia</span></div>
+          <div class="ob-option" onclick="startReadingPlan('proverbs')">💎 Provérbios em 31 Dias <span style="font-size:.78rem;color:var(--text-dim);display:block">1 capítulo por dia</span></div>
+        </div>
+      </div>
+      <div id="reading-active-plan" style="display:none"></div>
+    </div>
+
+    <!-- DIÁRIO DE ORAÇÃO -->
+    <div class="screen" id="screen-prayer">
+      <p class="section-title">🙏 Diário de Oração</p>
+      <div class="god-voice-card" style="margin-bottom:16px">
+        <div class="god-voice-label">✦ Deus fala sobre sua oração</div>
+        <p class="god-voice-text" id="prayer-god-voice">Cada pedido que você deposita aqui chega ao Meu coração. Não guardo apenas os grandes — os pequenos Me importam tanto quanto. Ore. Eu ouço.</p>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="filter-btn active" onclick="filtPrayer('all',this)">Todas</button>
+        <button class="filter-btn" onclick="filtPrayer('pending',this)">Aguardando</button>
+        <button class="filter-btn" onclick="filtPrayer('answered',this)">Respondidas ✓</button>
+      </div>
+      <button class="add-dream-btn" onclick="openModal('modal-prayer')" style="margin-bottom:16px">🙏 Adicionar pedido de oração</button>
+      <div id="prayer-list"></div>
+    </div>
+
+    <!-- CARTA DE DEUS -->
+    <div class="screen" id="screen-godletter">
+      <p class="section-title">💌 Carta de Deus para Você</p>
+      <div class="god-voice-card" style="margin-bottom:16px">
+        <div class="god-voice-label">✦ Como funciona</div>
+        <p class="god-voice-text" style="font-size:.88rem">Escreva como está se sentindo — o que está no seu coração agora. Com base na Palavra de Deus, uma carta personalizada será gerada como se o Pai estivesse respondendo diretamente a você.</p>
+      </div>
+      <div id="godletter-form">
+        <label class="form-label" style="margin-bottom:8px;display:block">Como você está se sentindo agora? O que quer dizer a Deus?</label>
+        <textarea id="godletter-input" style="width:100%;background:var(--dark3);border:1.5px solid var(--dark4);border-radius:var(--r);padding:14px;color:var(--text);font-family:'Lato',sans-serif;font-size:.95rem;min-height:120px;resize:vertical;outline:none;transition:border .2s" placeholder="Pai, hoje estou me sentindo..." oninput="this.style.borderColor='var(--gold)'"></textarea>
+        <button class="btn-gold" onclick="generateGodLetter()" style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px" id="btn-godletter">💌 Receber minha carta</button>
+      </div>
+      <div id="godletter-result" style="display:none;margin-top:20px"></div>
+      <div id="godletter-history" style="margin-top:24px"></div>
+    </div>
+
   </main>
   <nav class="app-nav">
-    <button class="nav-item active" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Início</span></button>
-    <button class="nav-item" onclick="goTo('bible')"><span class="nav-icon">📖</span><span class="nav-label">Bíblia</span></button>
-    <button class="nav-item" onclick="goTo('missions')"><span class="nav-icon">⚔️</span><span class="nav-label">Missões</span></button>
-    <button class="nav-item" onclick="goTo('fasting')"><span class="nav-icon">🌿</span><span class="nav-label">Jejum</span></button>
-    <button class="nav-item" onclick="goTo('devot')"><span class="nav-icon">🕊️</span><span class="nav-label">Devoção</span></button>
-    <button class="nav-item" onclick="goTo('finance')"><span class="nav-icon">💰</span><span class="nav-label">Finanças</span></button>
-    <button class="nav-item" onclick="goTo('dreams')"><span class="nav-icon">🌟</span><span class="nav-label">Sonhos</span></button>
-    <button class="nav-item" onclick="goTo('conquests')"><span class="nav-icon">🏆</span><span class="nav-label">Conquistas</span></button>
-    <button class="nav-item" onclick="goTo('relationship')"><span class="nav-icon">💍</span><span class="nav-label">Amor</span></button>
-    <button class="nav-item" onclick="goTo('children')"><span class="nav-icon">👶</span><span class="nav-label">Filhos</span></button>
-    <button class="nav-item" onclick="goTo('ministry')"><span class="nav-icon">⛪</span><span class="nav-label">Ministério</span></button>
+    <button class="nav-item active" id="nav-home" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Início</span></button>
+    <button class="nav-item" id="nav-bible" onclick="goTo('bible')"><span class="nav-icon">📖</span><span class="nav-label">Bíblia</span></button>
+    <button class="nav-item" id="nav-devot" onclick="goTo('devot')"><span class="nav-icon">🕊️</span><span class="nav-label">Devoção</span></button>
+    <button class="nav-item" onclick="toggleSidebar()"><span class="nav-icon">☰</span><span class="nav-label">Menu</span></button>
   </nav>
 </div>
 
@@ -812,7 +971,45 @@ select.form-input option{background:var(--dark2)}
   </div>
 </div>
 
-<!-- POPUP AVISO IMPORTANTE -->
+<!-- MODAL PEDIDO DE ORAÇÃO -->
+<div class="modal-overlay" id="modal-prayer">
+  <div class="modal-box">
+    <div class="modal-title">🙏 Novo Pedido de Oração</div>
+    <div class="form-group"><label class="form-label">Pedido</label><textarea class="form-input" id="pr-text" placeholder="O que você quer colocar diante de Deus..." style="min-height:80px;resize:vertical"></textarea></div>
+    <div class="form-group"><label class="form-label">Categoria</label>
+      <select class="form-input" id="pr-cat">
+        <option value="saude">💊 Saúde</option>
+        <option value="familia">👨‍👩‍👧 Família</option>
+        <option value="financas">💰 Finanças</option>
+        <option value="casamento">💍 Casamento</option>
+        <option value="trabalho">💼 Trabalho/Negócio</option>
+        <option value="filhos">👶 Filhos</option>
+        <option value="fe">✝️ Crescimento Espiritual</option>
+        <option value="salvacao">🕊️ Salvação de Alguém</option>
+        <option value="outro">🌟 Outro</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Versículo de sustento (opcional)</label><input class="form-input" id="pr-verse" placeholder="Ex: Filipenses 4.6"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn-gold" onclick="savePrayer()">Registrar Pedido</button>
+      <button class="btn-outline-gold" onclick="closeModal('modal-prayer')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL UP POPUP -->
+<div id="levelup-popup" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--dark2);border:1px solid rgba(201,168,76,.4);border-radius:20px;padding:32px 24px;max-width:400px;width:100%;text-align:center;box-shadow:0 0 80px rgba(201,168,76,.2)">
+    <div style="font-size:2.5rem;margin-bottom:12px" id="lu-icon">⚡</div>
+    <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-light);margin-bottom:6px">Novo Nível Alcançado!</div>
+    <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);margin-bottom:16px" id="lu-level">Nível 2 — Broto da Graça</div>
+    <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:16px;margin-bottom:20px;font-style:italic;font-size:.92rem;color:var(--text);line-height:1.75" id="lu-prayer"></div>
+    <div style="font-size:.8rem;color:var(--gold);margin-bottom:16px">✦ Declare esta oração em voz alta ✦</div>
+    <button onclick="closeLevelUp()" style="background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:12px;padding:14px 32px;font-size:1rem;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;width:100%">Amém! Recebo! ✦</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 <div id="popup-aviso" class="hidden">
   <div class="popup-box">
     <div class="popup-icon">📱</div>
@@ -3092,6 +3289,7 @@ const ST = {
   confessionsDeclared:[],
   minStatus:null,minMinistryType:'',minLeader:'',minMissCompleted:[],minMissActive:{},minMissDays:{},minMissFields:{},
   moodToday:'',moodDate:'',
+  prayers:[],readingPlan:null,godLetters:[],
   currentBook:null,currentChapter:1,
   bibleTestament:'AT'
 };
@@ -3125,9 +3323,86 @@ function finishOB(){
   initApp();showToast('Bem-vindo(a), '+name+'! +50 XP');
 }
 
+// ════════════════ SIDEBAR ════════════════
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('sidebar-overlay');
+  const hb=document.getElementById('hamburger');
+  const isOpen=sb.classList.contains('open');
+  sb.classList.toggle('open',!isOpen);
+  ov.classList.toggle('open',!isOpen);
+  hb.classList.toggle('open',!isOpen);
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+function updateSidebar(){
+  const n=document.getElementById('sb-name');
+  const l=document.getElementById('sb-level');
+  if(n)n.textContent=ST.name||'Amado(a)';
+  if(l){const{lvl,idx}=getLvlData();l.textContent='✦ Nível '+(idx+1)+' — '+lvl.name;}
+}
+
+// ════════════════ NAV ════════════════
+const SCREENS=['home','bible','missions','fasting','devot','finance','dreams','conquests','relationship','children','ministry','reading','prayer','godletter'];
+const NAV_IDS=['home','bible','devot'];
+function goTo(id){
+  SCREENS.forEach(s=>{
+    const el=document.getElementById('screen-'+s);
+    if(el)el.classList.toggle('active',s===id);
+  });
+  // Update bottom nav
+  NAV_IDS.forEach(n=>{
+    const el=document.getElementById('nav-'+n);
+    if(el)el.classList.toggle('active',n===id);
+  });
+  // Update sidebar items
+  SCREENS.forEach(s=>{
+    const el=document.getElementById('sbi-'+s);
+    if(el)el.classList.toggle('active',s===id);
+  });
+  window.scrollTo(0,0);
+  // God speaks when entering sections
+  onEnterScreen(id);
+}
+function onEnterScreen(id){
+  const voices={
+    bible:['Que bom que abriu a Minha Palavra. Vou falar com você através dela agora.','Estava esperando por este momento. Abra seu coração — tenho algo para você nestas páginas.','Cada vez que você abre a Bíblia, Eu sorrio. Vamos juntos?'],
+    devot:['Separei este momento para nós. Não há pressa — estou todo aqui para você.','Preparei algo especial para você hoje. Leia devagar — cada palavra é Minha para você.'],
+    missions:['Você não foi criado para ficar parado. Cada missão aqui é um convite Meu para crescer.','As missões não são tarefas — são encontros. Vou estar com você em cada uma.'],
+    fasting:['O jejum não é castigo — é um encontro mais profundo. Estou esperando por você aqui.','Quando você jejua, cria espaço. E Eu sempre preencho o espaço com a Minha presença.'],
+    prayer:['Cada pedido desta lista chegou ao Meu coração. Não esqueço nenhum.','Não há pedido pequeno demais para Mim. Tudo que é importante para você, é importante para Mim.'],
+    reading:['Que bom que veio. Estava lendo e pensando em você — sente aqui comigo.','Cada capítulo que você lê é uma conversa entre nós. Estou aqui.'],
+    godletter:['Tenho tanto para te dizer. Escreve o que está no coração — Eu respondo.','Nunca me cansarei de falar com você. Escreva — estou ouvindo.'],
+    relationship:['Fui Eu quem criou o amor. Posso ensinar você a amar como Eu amo.'],
+    children:['Os filhos são herança do Senhor. Cuido deles com você.'],
+    ministry:['Você foi chamado para isto. Não por acidente — por propósito.'],
+    finance:['Tudo que você tem vem de Mim. E o que você honra a Mim, Eu multiplico.']
+  };
+  const list=voices[id];
+  if(!list)return;
+  // Show subtle God-speaks toast after 1.5s
+  const msg=list[Math.floor(Math.random()*list.length)];
+  setTimeout(()=>{
+    showGodToast(msg);
+  },1500);
+}
+function showGodToast(msg){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.innerHTML='<span style="color:var(--gold);font-size:.75rem;letter-spacing:.05em">✦ DEUS FALA</span><br>'+msg;
+  t.style.maxWidth='320px';
+  t.style.lineHeight='1.5';
+  t.style.fontSize='.8rem';
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show');t.style.maxWidth='';t.style.lineHeight='';t.innerHTML='';},5000);
+}
+
 // ════════════════ APP INIT ════════════════
 function initApp(){
-  updateXP();renderHome();renderBibleBooks();
+  updateXP();updateSidebar();renderHome();renderBibleBooks();
   renderMissions();renderFasting();renderDevotionals();
   renderFinance();renderFinMissions();renderFinList();renderDreams();
   initRelationship();initChildren();
@@ -3135,14 +3410,322 @@ function initApp(){
   renderPromises();checkBirthday();
   initMinistry();initMoodTracker();
   renderGenderMissions();
+  renderPrayerList();
+  initReadingPlan();
+  renderGodLetterHistory();
 }
 
-// ════════════════ NAV ════════════════
-const SCREENS=['home','bible','missions','fasting','devot','finance','dreams','conquests','relationship','children','ministry'];
-function goTo(id){
-  SCREENS.forEach(s=>{document.getElementById('screen-'+s).classList.toggle('active',s===id);});
-  document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('active',SCREENS[i]===id));
-  window.scrollTo(0,0);
+// ════════════════ LEVEL UP PRAYERS ════════════════
+const LEVEL_PRAYERS={
+  2:'Pai, recebo este novo nível como declaração do Céu sobre minha vida. A Tua graça está brotando em mim. O que começou como semente, começa agora a crescer. Sou grato(a) por cada passo dado em Tua direção. Amém.',
+  3:'Senhor Jesus, as raízes estão se aprofundando. Onde antes havia superficialidade, agora há profundidade. Declaro que minha fé tem raiz — e raiz profunda não cai na tempestade. Que cada desafio aprofunde ainda mais minha dependência de Ti. Amém.',
+  4:'Pai, sou uma árvore plantada às margens dos rios — não planté a si mesma, Deus plantou. Declaro que dou fruto na estação certa, minhas folhas não murcham, e tudo que faço prospera. Não pela minha força — pela Tua água. Amém.',
+  5:'Senhor, o fruto do Espírito está se formando em mim — amor, alegria, paz, paciência, bondade, fidelidade, mansidão, domínio próprio. Esses frutos não vêm de esforço humano, mas da Tua videira em mim. Permaneço em Ti. Amém.',
+  6:'Jesus, recebo o manto do servo fiel. Que ao final Tua voz diga: bem feito, servo bom e fiel. Consagro meu serviço, meu trabalho, minha família a Ti. Que minha fidelidade nos detalhes honre Teu nome nos grandes momentos. Amém.',
+  7:'Pai, sou guerreiro(a) da fé. Não luto pela vitória — luto da vitória. Cristo já venceu e eu estou do lado vencedor. Visto a armadura de Deus hoje: verdade, justiça, paz, fé, salvação, Palavra e oração. Nenhuma arma formada contra mim prosperará. Amém.',
+  8:'Senhor, a voz profética está sendo formada em mim. Fala, Senhor — Teu servo ouve. Não falo por mim mesmo — falo o que Deus fala. Declaro que minha boca é instrumento de vida e não de morte, de construção e não de destruição. Amém.',
+  9:'Pai, a maturidade que vem de Ti não é de idade — é de caráter. Sou filho(a) amadurecido(a) pela tribulação, pela Palavra e pela intimidade com o Espírito Santo. Que o que está em mim frutifique nas próximas gerações. Amém.',
+  10:'Jesus, luz do mundo — e eu sou reflexo dessa luz. Que minha vida ilumine onde há trevas, aqueça onde há frieza, e leve esperança onde há desespero. Não escondo a luz debaixo do alqueire. Brilho para a glória do Pai. Amém.',
+  11:'Pai, sou embaixador(a) do Céu na terra. Cada lugar que piso é território do Reino. Minha família, meu trabalho, minha cidade — declaro autoridade do Céu sobre cada uma dessas esferas. O que ligo na terra é ligado no Céu. Amém.',
+  12:'Senhor, sou guardião(ã) da Tua Palavra. Que ela habite em mim ricamente. Que eu a medite dia e noite. Que minha vida seja comentário vivo da Escritura — não apenas leitor(a), mas vivedor(a) da Palavra. Amém.',
+  13:'Jesus, o apostolado não é posição — é serviço radical. Recebo a graça apostólica de plantar, regar, edificar e enviar. Que onde eu passo, igrejas se fortaleçam e discípulos sejam formados. Amém.',
+  14:'Pai, Moisés intercedeu e Deus relentou. Abraão intercedeu e Ló foi salvo. Eu também fico na brecha. Declaro intercessão sobre minha nação, minha cidade, minha família. O que está perdido pode ser encontrado. O que está morto pode reviver. Amém.',
+  15:'Senhor, as nações são herança Tua. Derrama sobre mim o coração de pai(mãe) para os povos. Que minha oração alcance o que meus pés nunca pisaram. Que minha fé mova o que só o Céu pode mover. Amém.',
+  16:'Jesus, a Igreja é Teu Corpo — e sou coluna dela. Que eu sustente, não derrube. Que eu construa, não destrua. Que eu seja fiel à visão que o Senhor deu ao Seu povo neste tempo. Amém.',
+  17:'Pai, Abraão foi chamado amigo de Deus — não servo, amigo. Recebo essa proximidade. Que minha oração seja conversa de amigo. Que minha obediência não venha do medo, mas do amor. Que eu conheça o Senhor, não apenas o que Ele faz. Amém.',
+  18:'Senhor, servo consagrado — não perfeito, mas consagrado. Separado para Deus antes de separado para qualquer coisa. Meu tempo, meu talento, meu tesouro — tudo consagrado ao Teu altar. Que o fogo desse altar nunca se apague. Amém.',
+  19:'Jesus, fiel até o fim — essa é a coroa que não murcha. Não me importa o reconhecimento dos homens, a aprovação das multidões, o sucesso aos olhos do mundo. Quero ouvir Tua voz dizendo: bem feito. Fico até o fim. Amém.',
+  20:'Pai, herdeiro(a) do Reino — essa é minha identidade final. Não herdeiro por mérito, mas por graça. Não por obras, mas pelo sangue. Tudo que é Teu é meu. Tudo que é meu é Teu. Que a eternidade comece agora. Amém.'
+};
+let lastLevelChecked=0;
+function checkLevelUp(oldXp, newXp){
+  const oldData=getLvlDataFor(oldXp);
+  const newData=getLvlDataFor(newXp);
+  if(newData.idx>oldData.idx&&newData.idx!==lastLevelChecked){
+    lastLevelChecked=newData.idx;
+    setTimeout(()=>showLevelUp(newData.idx+1, newData.lvl.name),800);
+  }
+}
+function getLvlDataFor(xp){
+  let idx=0;
+  for(let i=LEVELS.length-1;i>=0;i--){if(xp>=LEVELS[i].min){idx=i;break;}}
+  return{lvl:LEVELS[idx],idx};
+}
+function showLevelUp(level, levelName){
+  const popup=document.getElementById('levelup-popup');
+  const lu=document.getElementById('lu-level');
+  const lp=document.getElementById('lu-prayer');
+  const icons=['⚡','🌱','🌿','🌳','🍎','🔥','⚔️','📣','👑','☀️','🌍','📖','✦','🙌','🌐','⛪','🤝','🕊️','🏆','👑'];
+  const icon=icons[Math.min(level-2,icons.length-1)]||'✦';
+  document.getElementById('lu-icon').textContent=icon;
+  if(lu)lu.textContent='Nível '+level+' — '+levelName;
+  const prayer=LEVEL_PRAYERS[level]||'Pai, recebo este novo nível com gratidão. Cada XP conquistado é um passo de fé. Que este novo patamar de espiritualidade produza fruto que permanece. Em nome de Jesus, Amém.';
+  if(lp)lp.textContent=prayer;
+  popup.style.display='flex';
+  // Confetti-like gold particles
+  createParticles();
+}
+function closeLevelUp(){
+  document.getElementById('levelup-popup').style.display='none';
+}
+function createParticles(){
+  // Simple CSS particle effect
+  const popup=document.getElementById('levelup-popup');
+  for(let i=0;i<12;i++){
+    const p=document.createElement('div');
+    p.style.cssText=`position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:3001;left:${Math.random()*100}vw;top:${Math.random()*100}vh;animation:particle${Math.floor(Math.random()*3)+1} 1.5s ease-out forwards`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1500);
+  }
+}
+
+// ════════════════ PRAYER DIARY ════════════════
+const PRAYER_GOD_VOICES=[
+  'Cada pedido que você deposita aqui chega ao Meu coração. Não guardo apenas os grandes — os pequenos Me importam tanto quanto. Ore. Eu ouço.',
+  'Antes que você chame, Eu já responderei. Antes que você termine de orar, Eu já estou agindo. Confie no tempo que não vejo.',
+  'A oração persistente move o Céu. Ana orou por anos — e Eu respondi. Não desanime com o que ainda não veio. Continue.',
+  'Cada pedido pendente aqui é uma semente no solo do Meu coração. Em breve, você verá brotar.',
+  'Você não precisa orar eloquentemente — precisa orar honestamente. Eu prefiro o choro real ao discurso bonito.',
+];
+let prayerFilter='all';
+function filtPrayer(f,btn){
+  prayerFilter=f;
+  document.querySelectorAll('#screen-prayer .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPrayerList();
+}
+function renderPrayerList(){
+  const el=document.getElementById('prayer-list');if(!el)return;
+  // Update god voice
+  const gv=document.getElementById('prayer-god-voice');
+  if(gv)gv.textContent=PRAYER_GOD_VOICES[new Date().getDate()%PRAYER_GOD_VOICES.length];
+  if(!ST.prayers)ST.prayers=[];
+  let list=ST.prayers;
+  if(prayerFilter==='pending')list=list.filter(p=>!p.answered);
+  if(prayerFilter==='answered')list=list.filter(p=>p.answered);
+  if(list.length===0){
+    el.innerHTML='<div style="text-align:center;padding:32px;color:var(--text-dim);font-size:.9rem"><div style="font-size:2rem;margin-bottom:8px">🙏</div><p>Ainda não há pedidos aqui.<br>Deus está esperando ouvir de você.</p></div>';
+    return;
+  }
+  const catIcons={saude:'💊',familia:'👨‍👩‍👧',financas:'💰',casamento:'💍',trabalho:'💼',filhos:'👶',fe:'✝️',salvacao:'🕊️',outro:'🌟'};
+  el.innerHTML=list.map((p,i)=>`
+    <div style="background:${p.answered?'rgba(74,140,106,.07)':'var(--dark2)'};border:1px solid ${p.answered?'rgba(74,140,106,.25)':'var(--dark4)'};border-radius:var(--r);padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
+        <span style="font-size:1.2rem">${catIcons[p.cat]||'🙏'}</span>
+        <div style="flex:1">
+          <div style="font-size:.92rem;color:var(--text);line-height:1.6">${p.text}</div>
+          ${p.verse?`<div style="font-size:.75rem;color:var(--gold);margin-top:4px">📖 ${p.verse}</div>`:''}
+          <div style="font-size:.72rem;color:var(--text-dim);margin-top:4px">${p.date}</div>
+        </div>
+        ${p.answered?'<span style="color:var(--green-soft);font-size:.8rem;font-weight:700;white-space:nowrap">✓ Respondida!</span>':''}
+      </div>
+      ${!p.answered?`
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="markPrayerAnswered(${i})" style="background:rgba(74,140,106,.12);border:1px solid rgba(74,140,106,.3);color:#7dc49a;border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;font-family:'Lato',sans-serif">✓ Deus respondeu!</button>
+          <button onclick="deletePrayer(${i})" style="background:transparent;border:1px solid var(--dark5);color:var(--text-dim);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;font-family:'Lato',sans-serif">Remover</button>
+        </div>`
+      :`<div style="font-size:.82rem;color:#7dc49a;font-style:italic;margin-top:4px">🙌 ${p.answeredNote||'Deus respondeu!'}</div>`}
+    </div>
+  `).join('');
+}
+function savePrayer(){
+  const text=document.getElementById('pr-text').value.trim();
+  if(!text){showToast('Escreva seu pedido de oração');return;}
+  if(!ST.prayers)ST.prayers=[];
+  ST.prayers.unshift({text,cat:document.getElementById('pr-cat').value,verse:document.getElementById('pr-verse').value.trim(),date:new Date().toLocaleDateString('pt-BR'),answered:false});
+  addXP(20);save();closeModal('modal-prayer');
+  document.getElementById('pr-text').value='';
+  document.getElementById('pr-verse').value='';
+  renderPrayerList();
+  showToast('+20 XP — Pedido registrado! Deus ouviu 🙏');
+}
+function markPrayerAnswered(i){
+  if(!ST.prayers[i])return;
+  const note=prompt('Como Deus respondeu? (opcional)');
+  ST.prayers[i].answered=true;
+  ST.prayers[i].answeredNote=note||'Deus respondeu!';
+  ST.prayers[i].answeredDate=new Date().toLocaleDateString('pt-BR');
+  addXP(100);save();renderPrayerList();
+  showToast('+100 XP — Testemunho registrado! Glória a Deus! 🙌');
+}
+function deletePrayer(i){
+  if(!confirm('Remover este pedido?'))return;
+  ST.prayers.splice(i,1);save();renderPrayerList();
+}
+
+// ════════════════ READING PLAN ════════════════
+const READING_PLANS={
+  year:{name:'Bíblia em 1 Ano',days:365,chapters:['Gênesis_1','Gênesis_2','Gênesis_3','Êxodo_1','Êxodo_2','Levítico_1','Números_1','Deuteronômio_1','Josué_1','Juízes_1','Rute_1','1 Samuel_1','2 Samuel_1','1 Reis_1','2 Reis_1','1 Crônicas_1','2 Crônicas_1','Esdras_1','Neemias_1','Ester_1','Jó_1','Salmos_1','Salmos_23','Salmos_91','Provérbios_1','Eclesiastes_1','Isaías_1','Isaías_53','Jeremias_1','Ezequiel_1','Daniel_1','Oséias_1','Joel_1','Amós_1','Jonas_1','Mateus_1','Mateus_5','Marcos_1','Lucas_1','Lucas_15','João_1','João_3','João_14','Atos_1','Atos_2','Romanos_1','Romanos_8','1 Coríntios_13','2 Coríntios_1','Gálatas_1','Efésios_1','Filipenses_4','Colossenses_1','1 Tessalonicenses_1','1 Timóteo_1','Hebreus_11','Tiago_1','1 Pedro_1','1 João_1','Apocalipse_1','Apocalipse_22']},
+  nt90:{name:'NT em 90 Dias',days:90,chapters:['Mateus_1','Mateus_2','Mateus_3','Mateus_4','Mateus_5','Mateus_6','Mateus_7','Mateus_8','Marcos_1','Marcos_2','Marcos_3','Marcos_4','Lucas_1','Lucas_2','Lucas_3','Lucas_15','Lucas_24','João_1','João_3','João_14','João_17','João_21','Atos_1','Atos_2','Atos_9','Romanos_1','Romanos_3','Romanos_8','1 Coríntios_1','1 Coríntios_13','2 Coríntios_1','Gálatas_1','Efésios_1','Filipenses_4','Colossenses_1','1 Tessalonicenses_1','1 Timóteo_1','Hebreus_1','Hebreus_11','Tiago_1','1 Pedro_1','1 João_1','Apocalipse_1','Apocalipse_22']},
+  psalms30:{name:'Salmos em 30 Dias',days:30,chapters:['Salmos_1','Salmos_2','Salmos_3','Salmos_4','Salmos_5','Salmos_8','Salmos_15','Salmos_16','Salmos_19','Salmos_22','Salmos_23','Salmos_24','Salmos_27','Salmos_32','Salmos_34','Salmos_37','Salmos_40','Salmos_42','Salmos_46','Salmos_51','Salmos_62','Salmos_63','Salmos_84','Salmos_90','Salmos_91','Salmos_103','Salmos_119','Salmos_121','Salmos_139','Salmos_150']},
+  gospels:{name:'4 Evangelhos em 40 Dias',days:40,chapters:['Mateus_1','Mateus_2','Mateus_3','Mateus_4','Mateus_5','Mateus_6','Mateus_7','Mateus_16','Mateus_17','Mateus_26','Mateus_27','Mateus_28','Marcos_1','Marcos_2','Marcos_4','Marcos_6','Marcos_10','Marcos_14','Marcos_15','Marcos_16','Lucas_1','Lucas_2','Lucas_4','Lucas_10','Lucas_15','Lucas_19','Lucas_22','Lucas_23','Lucas_24','João_1','João_2','João_3','João_4','João_6','João_8','João_10','João_11','João_14','João_17','João_20']},
+  proverbs:{name:'Provérbios em 31 Dias',days:31,chapters:Array.from({length:31},(_,i)=>`Provérbios_${i+1}`)}
+};
+const READING_GOD_INVITES=[
+  'Que bom que veio. Estava aqui esperando por você — sente comigo. Tenho tanto para mostrar nestas páginas.',
+  'Abra seu coração antes de abrir este capítulo. O que estou prestes a falar com você vai além das palavras.',
+  'Cada dia que você lê, plantamos juntos algo eterno em você. Este capítulo de hoje é parte do Meu plano.',
+  'Não há pressa aqui — estou todo aqui para você. Leia devagar. Deixa Minha voz pousar em cada versículo.',
+  'Você não está lendo sozinho(a). Meu Espírito ilumina cada linha para que você entenda além do texto.',
+  'Hoje tenho algo específico para você nestas páginas. Leia com expectativa — Eu vou falar.',
+];
+const READING_DURING=[
+  'Enquanto você lê, Meu Espírito está ativo em você — revelando, curando, transformando.',
+  'Pause neste versículo e pergunte: Senhor, o que isso significa para minha vida hoje?',
+  'A Palavra que está entrando em você agora não voltará vazia. Ela produzirá fruto.',
+];
+function initReadingPlan(){
+  if(!ST.readingPlan)return;
+  document.getElementById('reading-plan-selector').style.display='none';
+  document.getElementById('reading-active-plan').style.display='block';
+  renderReadingPlan();
+}
+function startReadingPlan(planId){
+  if(ST.readingPlan&&!confirm('Você já tem um plano ativo. Deseja reiniciar?'))return;
+  ST.readingPlan={id:planId,startDate:new Date().toISOString().slice(0,10),daysRead:[],currentDay:0};
+  save();
+  document.getElementById('reading-plan-selector').style.display='none';
+  document.getElementById('reading-active-plan').style.display='block';
+  renderReadingPlan();
+  showToast('Plano iniciado! +30 XP 🙌');addXP(30);
+}
+function renderReadingPlan(){
+  const el=document.getElementById('reading-active-plan');if(!el||!ST.readingPlan)return;
+  const plan=READING_PLANS[ST.readingPlan.id];if(!plan)return;
+  const done=ST.readingPlan.daysRead||[];
+  const today=new Date().toISOString().slice(0,10);
+  const todayIdx=done.length;
+  const todayChapter=plan.chapters[todayIdx]||null;
+  const invite=READING_GOD_INVITES[new Date().getDate()%READING_GOD_INVITES.length];
+  const progress=Math.round((done.length/plan.chapters.length)*100);
+  let html=`
+    <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:var(--r);padding:16px;margin-bottom:16px">
+      <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-light);margin-bottom:6px">${plan.name}</div>
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:8px">
+        <span>${done.length} de ${plan.chapters.length} capítulos</span>
+        <span>${progress}%</span>
+      </div>
+      <div style="height:6px;background:var(--dark4);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${progress}%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:3px;transition:width .5s"></div>
+      </div>
+    </div>
+    <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 var(--r) var(--r) 0;margin-bottom:16px;font-style:italic;font-size:.9rem;color:var(--text);line-height:1.7">
+      ✦ "${invite}"
+    </div>`;
+  if(todayChapter&&!done.includes(today)){
+    const [book,ch]=todayChapter.split('_');
+    html+=`
+      <div style="background:var(--dark2);border:1px solid var(--gold-dark);border-radius:var(--r);padding:18px;margin-bottom:16px">
+        <div style="font-size:.72rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">📖 Leitura de Hoje — Dia ${done.length+1}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--text);margin-bottom:12px">${book} ${ch}</div>
+        <div style="font-style:italic;font-size:.82rem;color:var(--text-muted);margin-bottom:14px">"${READING_DURING[Math.floor(Math.random()*READING_DURING.length)]}"</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="goTo('bible');ST.currentBook=BOOKS_DATA.find(b=>b.n===${JSON.stringify(book)});ST.currentChapter=${ch};loadChapter();closeSidebar();" style="background:var(--gold);color:var(--dark);border:none;border-radius:8px;padding:10px 18px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif">📖 Ler agora</button>
+          <button onclick="markDayRead()" style="background:rgba(74,140,106,.12);border:1px solid rgba(74,140,106,.3);color:#7dc49a;border-radius:8px;padding:10px 18px;font-size:.88rem;cursor:pointer;font-family:'Lato',sans-serif">✓ Marquei como lido</button>
+        </div>
+      </div>`;
+  } else if(done.includes(today)){
+    html+=`<div style="background:rgba(74,140,106,.08);border:1px solid rgba(74,140,106,.2);border-radius:var(--r);padding:16px;margin-bottom:16px;text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">✅</div><div style="color:#7dc49a;font-size:.9rem">"Fiel em tudo! Você leu hoje — e Eu vi. Continue assim."</div></div>`;
+  }
+  // Streak
+  const streak=done.length;
+  html+=`<div style="display:flex;gap:12px;margin-bottom:16px">
+    <div style="flex:1;background:var(--dark3);border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold)">${streak}</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">Dias Lidos</div>
+    </div>
+    <div style="flex:1;background:var(--dark3);border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold)">${plan.chapters.length-done.length}</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">Restantes</div>
+    </div>
+    <div style="flex:1;background:var(--dark3);border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold)">${progress}%</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">Completo</div>
+    </div>
+  </div>`;
+  html+=`<button onclick="resetReadingPlan()" style="background:transparent;border:1px solid var(--dark5);color:var(--text-dim);border-radius:8px;padding:8px 14px;font-size:.78rem;cursor:pointer;font-family:'Lato',sans-serif;margin-top:4px">↩ Trocar plano</button>`;
+  el.innerHTML=html;
+}
+function markDayRead(){
+  const today=new Date().toISOString().slice(0,10);
+  if(!ST.readingPlan.daysRead)ST.readingPlan.daysRead=[];
+  if(ST.readingPlan.daysRead.includes(today)){showToast('Você já marcou hoje!');return;}
+  ST.readingPlan.daysRead.push(today);
+  addXP(40);save();renderReadingPlan();
+  showToast('+40 XP — Leitura do dia marcada! 📖');
+  // God congratulates
+  setTimeout(()=>showGodToast('Fiel em tudo. Você leu hoje — e Eu vi cada palavra que entrou em você.'),2000);
+}
+function resetReadingPlan(){
+  if(!confirm('Deseja trocar de plano? O progresso atual será perdido.'))return;
+  ST.readingPlan=null;save();
+  document.getElementById('reading-plan-selector').style.display='block';
+  document.getElementById('reading-active-plan').style.display='none';
+  document.getElementById('reading-active-plan').innerHTML='';
+}
+
+// ════════════════ GOD LETTER ════════════════
+const GOD_LETTER_GOD_VOICES=[
+  'Tenho tanto para te dizer. Escreve o que está no coração — Eu respondo com a Palavra.',
+  'Nunca me canso de falar com você. Cada carta que você escreve, Eu leio com amor de Pai.',
+  'Suas palavras chegam a Mim antes mesmo de você terminar de escrever. Fale livremente.',
+];
+async function generateGodLetter(){
+  const input=document.getElementById('godletter-input').value.trim();
+  if(!input||input.length<10){showToast('Escreva um pouco mais — abra seu coração');return;}
+  const btn=document.getElementById('btn-godletter');
+  btn.disabled=true;btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid var(--dark);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px"></span>Deus está respondendo...';
+  const result=document.getElementById('godletter-result');
+  result.style.display='block';
+  result.innerHTML='<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:.9rem"><div style="width:24px;height:24px;border:2px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px"></div>Deus está preparando Sua carta...</div>';
+  try{
+    const resp=await fetch('/api/carta',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({feeling:input,name:ST.name||'filho(a)',gender:ST.gender||''})
+    });
+    if(!resp.ok)throw new Error('Erro '+resp.status);
+    const data=await resp.json();
+    const letter=data.letter||data.text||'';
+    // Save to history
+    if(!ST.godLetters)ST.godLetters=[];
+    ST.godLetters.unshift({feeling:input,letter,date:new Date().toLocaleDateString('pt-BR')});
+    if(ST.godLetters.length>20)ST.godLetters=ST.godLetters.slice(0,20);
+    addXP(50);save();
+    // Render letter
+    result.innerHTML=`
+      <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:24px">
+        <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:16px;text-align:center">✦ Carta de Deus para Você ✦</div>
+        <div style="font-style:italic;font-size:.95rem;color:var(--text);line-height:1.85;white-space:pre-line">${letter}</div>
+        <div style="text-align:right;margin-top:16px;font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold-dark)">— Seu Pai Celestial</div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="document.getElementById('godletter-input').value='';document.getElementById('godletter-result').style.display='none';renderGodLetterHistory();" style="background:var(--gold);color:var(--dark);border:none;border-radius:8px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif">Nova carta</button>
+        </div>
+      </div>`;
+    renderGodLetterHistory();
+    showToast('+50 XP — Carta recebida! 💌');
+  }catch(e){
+    result.innerHTML='<div style="color:var(--text-dim);font-size:.88rem;padding:16px;text-align:center">Não foi possível gerar a carta agora. Tente novamente em instantes.</div>';
+  }
+  btn.disabled=false;btn.innerHTML='💌 Receber minha carta';
+}
+function renderGodLetterHistory(){
+  const el=document.getElementById('godletter-history');if(!el)return;
+  if(!ST.godLetters||ST.godLetters.length===0){el.innerHTML='';return;}
+  el.innerHTML=`<div class="section-title" style="margin-bottom:12px">📜 Cartas Anteriores</div>`+
+    ST.godLetters.map((l,i)=>`
+      <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer" onclick="toggleLetterExpand(${i})">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:.82rem;color:var(--text-muted)">${l.date}</div>
+          <span style="color:var(--gold);font-size:.8rem">▼</span>
+        </div>
+        <div style="font-size:.88rem;color:var(--text);margin-top:6px;font-style:italic">"${l.feeling.slice(0,80)}${l.feeling.length>80?'...':''}"</div>
+        <div id="letter-expand-${i}" style="display:none;margin-top:12px;border-top:1px solid var(--dark4);padding-top:12px;font-style:italic;font-size:.88rem;color:var(--text);line-height:1.7;white-space:pre-line">${l.letter}</div>
+      </div>`).join('');
+}
+function toggleLetterExpand(i){
+  const el=document.getElementById('letter-expand-'+i);
+  if(el)el.style.display=el.style.display==='none'?'block':'none';
 }
 
 // ════════════════ LEVELS ════════════════
@@ -3163,7 +3746,7 @@ function getLvlData(){
   for(let i=LEVELS.length-1;i>=0;i--){if(ST.xp>=LEVELS[i].min){idx=i;break;}}
   return{lvl:LEVELS[idx],next:LEVELS[idx+1]||null,idx};
 }
-function addXP(n){ST.xp+=n;updateXP();save();}
+function addXP(n){const old=ST.xp;ST.xp+=n;updateXP();updateSidebar();checkLevelUp(old,ST.xp);save();}
 function updateXP(){
   const{lvl,next,idx}=getLvlData();
   ST.level=idx+1;
@@ -6003,7 +6586,346 @@ function loadChapter(){
 }
 load();
 
-// ════════════════ POPUP AVISO ════════════════
+// ════════════════ PALAVRA DO DIA ════════════════
+const PALAVRAS_DO_DIA = [
+  {text:'Eu te escolhi antes da fundação do mundo. Não após você provar seu valor — antes. Essa é a ordem: eleição, depois obediência. Você não precisa conquistar o Meu amor. Já é seu.',ref:'Efésios 1.4',tema:'Eleição'},
+  {text:'Quando você não tem força para orar, o Espírito Santo intercede por você com gemidos inexprimíveis. Ou seja — mesmo no silêncio, há oração em você. Nunca estou sem acesso ao seu coração.',ref:'Romanos 8.26',tema:'Intercessão'},
+  {text:'Antes que você clame, Eu já responderei. Antes que você termine, Eu já ouvi. A Minha resposta às vezes precede a sua pergunta. Confie no que ainda não vê.',ref:'Isaías 65.24',tema:'Oração'},
+  {text:'Sua fraqueza não é obstáculo para Mim. É a condição. Pois quando você é fraco, é então que Meu poder se aperfeiçoa em você. Não peço força sua — peço espaço.',ref:'2 Coríntios 12.9',tema:'Graça'},
+  {text:'Não há condenação para quem está em Cristo. Nenhuma. Não uma pequena quantidade. Nenhuma. A voz que te acusa não é a Minha. Eu vim para salvar, não para condenar.',ref:'Romanos 8.1',tema:'Identidade'},
+  {text:'Pais que amam seus filhos correm quando os veem de longe. Fiz isso pelo filho pródigo. Faço isso por você toda vez que você volta. Não caminho — corro.',ref:'Lucas 15.20',tema:'Amor do Pai'},
+  {text:'Eu faço tudo concorrer para o bem. Tudo — não só as boas coisas. O erro do ano passado, a traição, a perda. Nas Minhas mãos nada é desperdício.',ref:'Romanos 8.28',tema:'Soberania'},
+  {text:'Você não precisa lutar para Me encontrar. Eu já estou mais próximo do que você respira. O problema nunca é Minha distância — é sua percepção.',ref:'Atos 17.27',tema:'Presença'},
+  {text:'O que Eu prometo, Eu cumpro. Não porque sou obrigado — porque é Meu caráter. Deus não é homem para mentir. A promessa que você está esperando está em processo.',ref:'Números 23.19',tema:'Fidelidade'},
+  {text:'Você foi criado(a) para obras que Eu já preparei de antemão. Não vaga sem rumo — tem destino. Não improvisa — tem um plano traçado antes do seu nascimento.',ref:'Efésios 2.10',tema:'Propósito'},
+  {text:'A paz que Eu dou não é como a que o mundo dá. A minha não depende de circunstâncias favoráveis. É sobrenatural. É guarda. É presença.',ref:'João 14.27',tema:'Paz'},
+  {text:'Quando você passa pelo fogo, Eu estou no fogo com você. Quando atravessa as águas, não te deixo afogar. O teste não cancela a Minha companhia.',ref:'Isaías 43.2',tema:'Proteção'},
+  {text:'Meus pensamentos sobre você são mais do que os grãos de areia. Eu penso em você constantemente — não com impaciência, mas com amor e propósito.',ref:'Salmos 139.17-18',tema:'Amor'},
+  {text:'O que começou em você não foi ideia sua. Foi Minha. E Eu não abandono o que começo. A boa obra que iniciei, Eu mesmo vou completar.',ref:'Filipenses 1.6',tema:'Fidelidade'},
+  {text:'Quando você louva em meio à tribulação, as portas da prisão se abrem. O louvor não é negação da dor — é declaração de que Eu sou maior que ela.',ref:'Atos 16.25-26',tema:'Louvor'},
+  {text:'Eu dou sabedoria a quem pede, sem reprovar. Sem fazer você se sentir tolo(a) pela pergunta. Pergunte. Peça. Eu respondo.',ref:'Tiago 1.5',tema:'Sabedoria'},
+  {text:'Você foi comprado por preço. Não por dinheiro, por obras ou por mérito — pelo sangue do Meu Filho. Seu valor foi estabelecido na Cruz. Não pode ser reduzido.',ref:'1 Coríntios 6.20',tema:'Valor'},
+  {text:'Mesmo que uma mãe se esqueça do filho que mamava, Eu não Me esquecerei de você. Gravei seu nome nas palmas das Minhas mãos.',ref:'Isaías 49.15-16',tema:'Amor Eterno'},
+  {text:'Abri um caminho no mar e rios no deserto. O impossível da sua vida não é impossível para Mim. Estou fazendo algo novo — você está vendo?',ref:'Isaías 43.19',tema:'Milagres'},
+  {text:'Você não recebeu espírito de escravidão para temer, mas espírito de adoção. Pode Me chamar de Pai — não de mestre distante, mas de Pai que te conhece pelo nome.',ref:'Romanos 8.15',tema:'Identidade'},
+  {text:'A chuva e a neve descem e não voltam sem primeiro regar a terra. Assim é a Minha Palavra — não volta vazia. O que você leu e ouviu está trabalhando em você.',ref:'Isaías 55.10-11',tema:'Palavra'},
+  {text:'Não subestime os dias de pequenas coisas. Zerobabel construiu o templo tijolo por tijolo. Cada passo fiel de hoje é parte de algo eterno.',ref:'Zacarias 4.10',tema:'Fidelidade'},
+  {text:'Quando você estiver no vale, não se esqueça: o mesmo pastor que guia pelas pastagens verdes é o mesmo que caminha no vale. Não mudei — você está em terreno diferente.',ref:'Salmos 23.4',tema:'Guia'},
+  {text:'Sed satisfeita(o) só por Mim — porque toda outra fonte um dia seca. Eu sou a fonte de água viva. Não apenas um rio — a nascente.',ref:'João 4.14',tema:'Satisfação'},
+  {text:'Há momentos em que Meu silêncio parece abandono. Mas Eu estava tecendo algo maior. José ficou 13 anos antes de ver o propósito. Espere — Eu estou trabalhando.',ref:'Gênesis 50.20',tema:'Espera'},
+  {text:'Você pode Me chamar de Abba — a palavra mais íntima de filho para pai. Não estou distante em um trono inacessível. Estou aqui, como pai que segura a mão.',ref:'Marcos 14.36',tema:'Intimidade'},
+  {text:'O diabo não tem armas novas. Mentira, acusação, medo — as mesmas desde o Éden. Mas você conhece a voz do Bom Pastor e a voz de outro não seguirá.',ref:'João 10.5',tema:'Discernimento'},
+  {text:'Eu habito no louvor do Meu povo. Quando você adora, constrói uma habitação para Mim. O Rei entra onde é convidado.',ref:'Salmos 22.3',tema:'Adoração'},
+  {text:'A fé que move montanhas não é a mais alta — é a mais persistente. Um grão de mostarda é pequeno, mas plantado cresce. Continue crendo.',ref:'Mateus 17.20',tema:'Fé'},
+  {text:'Não tema o que pode matar o corpo. Eu tenho cuidado do que é eterno em você. O que é temporário, passe. O que é eterno, permaneça.',ref:'Mateus 10.28',tema:'Coragem'},
+  {text:'Quando dois ou três se reúnem em Meu nome, Eu estou no meio. Não como observador distante — no meio. A comunidade que você tem é lugar da Minha presença.',ref:'Mateus 18.20',tema:'Comunidade'},
+];
+
+// ════════════════ INTERCESSION OF THE DAY ════════════════
+const INTERCESSION_TARGETS = [
+  {who:'Sua Nação',text:'Ore pelo Brasil — pelos líderes, pelas famílias, pelas cidades, pela Igreja que ainda está de pé.',icon:'🇧🇷',verse:'2 Crônicas 7.14'},
+  {who:'Sua Família',text:'Nomeie cada pessoa da sua família e cubra-os com o sangue de Jesus. Declare propósito sobre cada vida.',icon:'👨‍👩‍👧',verse:'Josué 24.15'},
+  {who:'Sua Cidade',text:'Ore pelos bairros, escolas, hospitais e líderes da sua cidade. Declare o Reino de Deus sobre ela.',icon:'🏙️',verse:'Jeremias 29.7'},
+  {who:'Líderes da Igreja',text:'Ore pelos pastores e líderes que servem fielmente. Eles carregam um peso — interceda por eles.',icon:'⛪',verse:'Hebreus 13.17'},
+  {who:'Os Perdidos',text:'Ore por 3 pessoas que você conhece que ainda não conhecem Jesus. Chame os nomes. Deus os conhece.',icon:'🕊️',verse:'2 Pedro 3.9'},
+  {who:'Missionários',text:'Em algum lugar do mundo, alguém está pregando o evangelho em condições difíceis. Interceda por eles agora.',icon:'🌍',verse:'Romanos 10.15'},
+  {who:'Crianças e Jovens',text:'A próxima geração está sendo formada agora. Ore pela proteção espiritual da juventude.',icon:'🔥',verse:'Joel 2.28'},
+];
+
+// ════════════════ MUSIC SUGGESTIONS ════════════════
+const MUSIC_BY_MOOD = {
+  alegre:   [{name:'Nada Além do Sangue',artist:'Pregadores da Cidade'},{name:'Digno',artist:'Elevation Worship'},{name:'Glória',artist:'Vineyard Worship'}],
+  grato:    [{name:'Lugar Secreto',artist:'Ministério Zoe'},{name:'Como é Bom',artist:'Gabriela Rocha'},{name:'10000 Razões',artist:'Matt Redman'}],
+  ansioso:  [{name:'Vai Ser Lindo',artist:'Fernandinho'},{name:'Não Há Outro',artist:'Diante do Trono'},{name:'Paz que Excede o Entendimento',artist:'Ton Carfi'}],
+  triste:   [{name:'Teu Amor me Sustenta',artist:'Gabriela Rocha'},{name:'Ainda que a Figueira',artist:'Ministério Ipiranga'},{name:'Deus do Impossível',artist:'Elevation Worship'}],
+  cansado:  [{name:'Águas Purificadoras',artist:'Diante do Trono'},{name:'Vem, Espírito Santo',artist:'Ministério Zoe'},{name:'Você Me Sustenta',artist:'Fernandinho'}],
+  lutando:  [{name:'Soldado do Senhor',artist:'Ministério Avivah'},{name:'Basta uma Palavra',artist:'Anderson Freire'},{name:'Nada me Tirará',artist:'Ministério Ipiranga'}],
+  firme:    [{name:'Eu Me Rendo',artist:'Aline Barros'},{name:'Toda Honra',artist:'Ministério Zoe'},{name:'Hosana',artist:'Hillsong'}],
+  vazio:    [{name:'Tu es Tudo que Preciso',artist:'Diante do Trono'},{name:'Enche-me',artist:'Gabriela Rocha'},{name:'Vem Espírito',artist:'Ministério Ipiranga'}],
+};
+const GOD_MUSIC_VOICES = [
+  'Feche seus olhos. Eu vou falar com você através dessa canção. Cada nota é portadora da Minha presença.',
+  'Deixa essa música entrar fundo. Não ouça apenas com os ouvidos — ouça com o coração. Eu estou aqui.',
+  'A adoração te posiciona. Quando você adora, o Céu se inclina para perto de você.',
+  'Essa música foi tocada pensando em você. Deixa que ela cure o que só Deus pode curar.',
+  'Existe um louvor que não precisa de letra perfeita — só de coração aberto. Esse é o tipo que Eu mais amo.',
+];
+
+// ════════════════ SPIRITUAL AGENDA ════════════════
+const SPECIAL_DATES = [
+  {month:1,day:1,title:'Ano Novo',message:'Novo ano, nova estação. Eu declaro sobre este ano: aberto. Aberto para encontros comigo, crescimento, milagres e colheita.',icon:'🎊'},
+  {month:3,day:1,title:'Mês da Mulher',message:'Você não é menos. Foi criada à Minha imagem com a mesma dignidade. A mulher que teme ao Senhor é a que será louvada.',icon:'👑'},
+  {month:4,day:1,title:'Páscoa',message:'A Cruz não foi derrota — foi vitória. O que parecia fim era começo. Isso vale para tudo que parece morto na sua vida hoje.',icon:'✝️'},
+  {month:6,day:1,title:'Mês de Junho',message:'Na metade do ano, Eu ainda sou fiel. O que ainda não veio no primeiro semestre, pode vir no segundo. Não desanime.',icon:'🌟'},
+  {month:12,day:25,title:'Natal',message:'O Verbo se fez carne. Deus escolheu encarnar em vez de legislar de longe. Esse é Meu estilo — eu venho até você.',icon:'⭐'},
+];
+
+// ════════════════ RENDER HOME EXTRAS ════════════════
+function renderPalavrasDoDia(){
+  const el=document.getElementById('palavra-do-dia-card');if(!el)return;
+  const p=PALAVRAS_DO_DIA[new Date().getDate()%PALAVRAS_DO_DIA.length];
+  el.innerHTML=`<div class="palavra-card">
+    <div class="palavra-label">✦ Palavra de Deus para Você Hoje • ${p.tema}</div>
+    <p class="palavra-text">"${p.text}"</p>
+    <div class="palavra-ref">${p.ref}</div>
+  </div>`;
+}
+
+function renderIntercessionCard(){
+  const el=document.getElementById('intercession-card');if(!el)return;
+  const t=INTERCESSION_TARGETS[new Date().getDay()%INTERCESSION_TARGETS.length];
+  el.innerHTML=`<div class="intercession-card">
+    <div style="font-size:.68rem;color:#b08ad0;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:10px">🙏 Intercessão do Dia</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:1.5rem">${t.icon}</span>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${t.who}</div>
+        <div style="font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px">${t.text}</div>
+      </div>
+    </div>
+    <div style="font-style:italic;font-size:.78rem;color:#b08ad0;margin-bottom:12px">📖 ${t.verse}</div>
+    <button onclick="markIntercessionDone(this)" style="background:rgba(122,90,156,.15);border:1px solid rgba(122,90,156,.3);color:#b08ad0;border-radius:8px;padding:8px 14px;font-size:.8rem;cursor:pointer;font-family:'Lato',sans-serif;transition:all .2s" id="intercession-btn">✓ Orei por ${t.who} hoje</button>
+  </div>`;
+  // Check if already done today
+  const today=new Date().toISOString().slice(0,10);
+  if(ST.intercessionDone&&ST.intercessionDone[today]){
+    const btn=document.getElementById('intercession-btn');
+    if(btn){btn.style.background='rgba(74,140,106,.15)';btn.style.borderColor='rgba(74,140,106,.3)';btn.style.color='#7dc49a';btn.textContent='✓ Intercessão feita hoje!';}
+  }
+}
+function markIntercessionDone(btn){
+  const today=new Date().toISOString().slice(0,10);
+  if(!ST.intercessionDone)ST.intercessionDone={};
+  if(ST.intercessionDone[today]){showToast('Você já intercedeu hoje!');return;}
+  ST.intercessionDone[today]=true;
+  addXP(25);save();
+  btn.style.background='rgba(74,140,106,.15)';btn.style.borderColor='rgba(74,140,106,.3)';btn.style.color='#7dc49a';btn.textContent='✓ Intercessão feita hoje!';
+  showToast('+25 XP — Intercessão registrada! O Céu ouviu 🙏');
+  setTimeout(()=>showGodToast('Sua oração por '+INTERCESSION_TARGETS[new Date().getDay()%INTERCESSION_TARGETS.length].who+' chegou ao Meu coração. Obrigado por interceder.'),2500);
+}
+
+function renderMonthlyReport(){
+  const el=document.getElementById('monthly-report-card');if(!el)return;
+  const now=new Date();
+  const month=now.getMonth();
+  const year=now.getFullYear();
+  // Count this month's activity
+  const devotDone=Object.keys(ST.devotRead||{}).filter(d=>d.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)).length;
+  const chaptersRead=Object.keys(ST.readChapters||{}).length;
+  const missionsThisMonth=(ST.missionsCompleted||[]).length;
+  const prayersAnswered=(ST.prayers||[]).filter(p=>p.answered).length;
+  const readingDays=(ST.readingPlan?.daysRead||[]).length;
+  if(devotDone===0&&chaptersRead===0)return; // Don't show if no activity
+  const monthNames=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  // God's message based on activity
+  const msgs=[
+    `${ST.name||'filho(a)'}, cada passo deste mês foi visto por Mim. Nenhum dia de fidelidade é pequeno.`,
+    `Olha para onde você chegou. No início do mês não era assim. Eu estava trabalhando em você.`,
+    `Cada devocional lido, cada capítulo aberto, cada oração — tudo registrado no Céu.`,
+    `Seu crescimento espiritual não se mede só em números. Mas esses números dizem: você apareceu.`,
+  ];
+  el.style.display='block';
+  el.innerHTML=`<div class="report-card">
+    <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold-light);margin-bottom:4px">📊 Seu Mês em ${monthNames[month]}</div>
+    <div class="report-grid">
+      <div class="report-stat"><div class="report-num">${devotDone}</div><div class="report-label">Devocionais</div></div>
+      <div class="report-stat"><div class="report-num">${chaptersRead}</div><div class="report-label">Caps. Lidos</div></div>
+      <div class="report-stat"><div class="report-num">${missionsThisMonth}</div><div class="report-label">Missões</div></div>
+      <div class="report-stat"><div class="report-num">${prayersAnswered}</div><div class="report-label">Orações Resp.</div></div>
+      <div class="report-stat"><div class="report-num">${readingDays}</div><div class="report-label">Dias de Plano</div></div>
+      <div class="report-stat"><div class="report-num">${ST.xp}</div><div class="report-label">XP Total</div></div>
+    </div>
+    <div style="font-style:italic;font-size:.85rem;color:var(--text-muted);line-height:1.65;border-left:3px solid var(--gold-dark);padding-left:10px">"${msgs[now.getDate()%msgs.length]}"</div>
+  </div>`;
+}
+
+// ════════════════ GOD WHISPER SYSTEM ════════════════
+const GOD_WHISPERS_RANDOM = [
+  'Você sabe que eu penso em você constantemente? Não só quando você ora. Sempre.',
+  'A decisão que está pesando na sua cabeça — Eu tenho a resposta. Vem me perguntar.',
+  'Sei do cansaço. Sei da luta. E ainda assim, fico impressionado com você.',
+  'Aquela pessoa que te feriu — estou cuidando disso. Você não precisa mais carregar.',
+  'O sonho que você quase desistiu — ainda está nos Meus planos. Não solte.',
+  'Você está crescendo mesmo sem perceber. Eu vejo.',
+  'A solidão que você sente às vezes — é o espaço que deixei para que Me buscasse.',
+  'Amo quando você me procura não por obrigação, mas por querer. Como agora.',
+  'O que Eu preparei para você é além do que você consegue pedir ou entender.',
+  'Não compare sua jornada. Cada filho meu tem um caminho único que eu traçei.',
+];
+let whisperTimer = null;
+function startGodWhisperSystem(){
+  // Random whisper every 4-8 minutes of app use
+  function scheduleWhisper(){
+    const delay = (4 + Math.random()*4) * 60 * 1000;
+    whisperTimer = setTimeout(()=>{
+      showFloatingWhisper();
+      scheduleWhisper();
+    }, delay);
+  }
+  scheduleWhisper();
+}
+function showFloatingWhisper(){
+  const existing = document.getElementById('god-whisper-float');
+  if(existing)existing.remove();
+  const msg = GOD_WHISPERS_RANDOM[Math.floor(Math.random()*GOD_WHISPERS_RANDOM.length)];
+  const el = document.createElement('div');
+  el.id = 'god-whisper-float';
+  el.className = 'god-whisper';
+  el.innerHTML = `<button class="god-whisper-close" onclick="this.parentElement.remove()">✕</button>
+    <div class="god-whisper-label">✦ Deus sussurou</div>
+    <div class="god-whisper-text">"${msg}"</div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>{if(el.parentElement)el.remove();}, 8000);
+}
+
+// ════════════════ MUSIC IN MOOD TRACKER ════════════════
+function renderMusicSuggestion(mood){
+  const songs = MUSIC_BY_MOOD[mood];
+  if(!songs)return;
+  const song = songs[new Date().getDate()%songs.length];
+  const godVoice = GOD_MUSIC_VOICES[new Date().getDate()%GOD_MUSIC_VOICES.length];
+  const existing = document.getElementById('mood-music');
+  const el = existing || document.createElement('div');
+  el.id = 'mood-music';
+  el.className = 'music-suggestion';
+  el.innerHTML = `<div class="music-label">🎵 Deus sugere para você agora</div>
+    <div style="font-style:italic;font-size:.82rem;color:var(--text);line-height:1.6;margin-bottom:10px">"${godVoice}"</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="font-size:1.8rem">🎶</div>
+      <div>
+        <div style="font-size:.9rem;color:var(--text);font-weight:700">${song.name}</div>
+        <div style="font-size:.78rem;color:var(--text-muted)">${song.artist}</div>
+      </div>
+    </div>
+    <button onclick="searchYoutube('${song.name} ${song.artist}')" style="margin-top:10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold);border-radius:8px;padding:7px 14px;font-size:.8rem;cursor:pointer;font-family:'Lato',sans-serif;width:100%">▶ Ouvir no YouTube</button>`;
+  if(!existing){
+    const moodResponse = document.getElementById('mood-response');
+    if(moodResponse)moodResponse.appendChild(el);
+  }
+}
+function searchYoutube(query){
+  window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(query),'_blank');
+}
+
+// ════════════════ PATCH selectMood to add music ════════════════
+const _origSelectMood = selectMood;
+window.selectMood = function(mood, emoji, label){
+  _origSelectMood(mood, emoji, label);
+  setTimeout(()=>renderMusicSuggestion(mood), 600);
+};
+
+// ════════════════ SPECIAL DATE CHECKER ════════════════
+function checkSpecialDates(){
+  const now = new Date();
+  const special = SPECIAL_DATES.find(d=>d.month===now.getMonth()+1&&d.day===now.getDate());
+  if(!special)return;
+  const key = 'pv_special_'+special.month+'_'+special.day+'_'+now.getFullYear();
+  if(localStorage.getItem(key))return;
+  setTimeout(()=>{
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2500;display:flex;align-items:center;justify-content:center;padding:20px';
+    el.innerHTML = `<div style="background:var(--dark2);border:1px solid rgba(201,168,76,.35);border-radius:20px;padding:32px 24px;max-width:380px;width:100%;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:12px">${special.icon}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-light);margin-bottom:12px">${special.title}</div>
+      <div style="font-style:italic;font-size:.92rem;color:var(--text);line-height:1.75;margin-bottom:20px">"${special.message}"</div>
+      <button onclick="this.closest('[style]').remove();localStorage.setItem('${key}','1')" style="background:var(--gold);color:var(--dark);border:none;border-radius:10px;padding:13px 28px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;width:100%">✦ Amém, Pai!</button>
+    </div>`;
+    document.body.appendChild(el);
+  }, 3000);
+}
+
+// ════════════════ BIBLE GOD GREETING ════════════════
+const BIBLE_GREETINGS = [
+  {book:'Gênesis', msg:'O começo de tudo. Eu estava aqui antes de qualquer palavra existir. E estarei depois de tudo. Vamos começar?'},
+  {book:'Salmos', msg:'Este é o livro dos gemidos e dos louvores. Aqui você pode ser totalmente honesto(a). Nenhuma emoção é proibida diante de Mim.'},
+  {book:'Provérbios', msg:'Sabedoria não é conhecimento acumulado — é vida vivida com Deus no centro. Cada provérbio aqui é um convite para isso.'},
+  {book:'João', msg:'Este é o evangelho do amor. Escrevi — por meio de João — para que você creia, e crendo, tenha vida. Leia como carta pessoal.'},
+  {book:'Romanos', msg:'Paulo escreve sobre a maior revolução já anunciada: justificação pela fé. Não por obras, não por religião. Por graça.'},
+  {book:'Apocalipse', msg:'Não é livro de terror — é livro de esperança. O fim já está escrito: Eu venci. E você está do lado do vencedor.'},
+];
+
+// ════════════════ FASTING GOD MESSAGE ════════════════
+const FASTING_GOD_MESSAGES = [
+  'O jejum não é sobre privação — é sobre prioridade. Quando você coloca Minha presença acima do conforto, o Céu se move.',
+  'No silêncio que o jejum cria, consigo falar mais claramente. O barulho do mundo diminui, e Minha voz pode ressoar.',
+  'Elias jejuou no deserto e Eu apareci em voz delicada. Não em ventania, não em terremoto. Em silêncio. É o que o jejum cria.',
+  'Ana jejuou por anos. E quando eu respondi, o filho que nasceu mudou uma nação. O seu jejum tem consequências eternas.',
+  'Daniel jejuou e os anjos foram enviados. Cada dia de jejum é um anjo mobilizado a favor da sua causa.',
+];
+
+// ════════════════ PATCH renderFasting TO ADD GOD MESSAGE ════════════════
+const _origRenderFasting = typeof renderFasting !== 'undefined' ? renderFasting : null;
+function addFastingGodVoice(){
+  const screen = document.getElementById('screen-fasting');
+  if(!screen)return;
+  const existing = document.getElementById('fasting-god-voice-card');
+  if(existing)return;
+  const msg = FASTING_GOD_MESSAGES[new Date().getDate()%FASTING_GOD_MESSAGES.length];
+  const div = document.createElement('div');
+  div.id = 'fasting-god-voice-card';
+  div.className = 'god-voice-card';
+  div.style.marginBottom = '16px';
+  div.innerHTML = `<div class="god-voice-label">✦ Deus fala sobre o Jejum</div><p class="god-voice-text">${msg}</p>`;
+  screen.insertBefore(div, screen.firstChild.nextSibling);
+}
+
+// ════════════════ MISSIONS GOD MESSAGE ════════════════
+const MISSIONS_GOD_MESSAGES = [
+  'Cada missão que você inicia é um sim a Mim. Não precisas completar para que eu me alegre — o sim já me move.',
+  'As missões não são para provar que você é bom cristão(ã). São para que você se encontre com Minha presença em novos territórios.',
+  'Você foi chamado(a) para obras que preparei de antemão. Cada missão aqui é um preview do eterno.',
+  'Não olhe para as missões concluídas com orgulho. Olhe com gratidão — fui Eu quem capacitou.',
+];
+function addMissionsGodVoice(){
+  const screen = document.getElementById('screen-missions');
+  if(!screen)return;
+  const existing = document.getElementById('missions-god-voice-card');
+  if(existing)return;
+  const msg = MISSIONS_GOD_MESSAGES[new Date().getDate()%MISSIONS_GOD_MESSAGES.length];
+  const div = document.createElement('div');
+  div.id = 'missions-god-voice-card';
+  div.className = 'god-voice-card';
+  div.style.marginBottom = '16px';
+  div.innerHTML = `<div class="god-voice-label">✦ Deus fala sobre Missões</div><p class="god-voice-text">${msg}</p>`;
+  screen.insertBefore(div, screen.firstChild.nextSibling);
+}
+
+// ════════════════ PATCH renderHome ════════════════
+const _origRenderHome = renderHome;
+function renderHome(){
+  _origRenderHome();
+  renderPalavrasDoDia();
+  renderIntercessionCard();
+  renderMonthlyReport();
+  checkSpecialDates();
+  // Add god voices to other screens once
+  setTimeout(()=>{
+    addFastingGodVoice();
+    addMissionsGodVoice();
+  }, 500);
+}
+
+// ════════════════ PATCH initApp ════════════════
+const _origInitApp = initApp;
+function initApp(){
+  _origInitApp();
+  startGodWhisperSystem();
+  // Greet on first open of day
+  const today = new Date().toISOString().slice(0,10);
+  const lastGreet = localStorage.getItem('pv_last_greet');
+  if(lastGreet !== today){
+    localStorage.setItem('pv_last_greet', today);
+    const h = new Date().getHours();
+    const greet = h<12?'Bom dia':'h<18'?'Boa tarde':'Boa noite';
+    const msgs = [
+      `${greet}, ${ST.name||'amado(a)'}. Acordei pensando em você. Que bom que está aqui.`,
+      `Você apareceu mais um dia. Isso me alegra mais do que você imagina.`,
+      `${greet}! Tenho algo preparado para você hoje. Fique comigo.`,
+      `Sabia que antes de você abrir esse app, eu já estava esperando? Venha.`,
+    ];
+    setTimeout(()=>showFloatingWhisper(msgs[new Date().getDate()%msgs.length]), 3000);
+  }
+}
 function mostrarPopupAviso(){
   // Mostra só uma vez — guarda no localStorage
   if(!localStorage.getItem('pv_aviso_cache_v1')){
