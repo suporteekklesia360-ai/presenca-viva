@@ -148,37 +148,15 @@ async function checkAccess() {
 }
 
 async function loadApp(user, name, isAdmin) {
-  // Buscar o conteúdo do arquivo presenca-viva-v2.html via fetch
-  // Em produção, esse arquivo estará na pasta pública do projeto
-  try {
-    const response = await fetch('presenca-viva-app.html?v=' + Date.now());
-    const html = await response.text();
+  // Salvar dados do usuário no sessionStorage para o app ler
+  sessionStorage.setItem('pv_user_id', user.id);
+  sessionStorage.setItem('pv_user_name', name);
+  sessionStorage.setItem('pv_user_email', user.email);
+  sessionStorage.setItem('pv_user_admin', isAdmin ? '1' : '0');
 
-    // Criar iframe seguro com o conteúdo
-    const container = document.getElementById('app-container');
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'width:100%;height:100vh;border:none;display:block;';
-    iframe.id = 'app-frame';
-    container.appendChild(iframe);
-
-    // Injetar HTML no iframe com dados do usuário
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open();
-    // Inject user data into the app
-    const injectedHtml = html.replace(
-      '// ════════════════ BOOT ════════════════',
-      `// Dados do usuário injetados pelo wrapper
-      window.PV_USER = { id: '${user.id}', name: '${name}', email: '${user.email}', isAdmin: ${isAdmin} };
-      // ════════════════ BOOT ════════════════`
-    );
-    doc.write(injectedHtml);
-    doc.close();
-  } catch(e) {
-    // Fallback: redirecionar direto para o app
-    console.error('Erro ao carregar app:', e);
-    document.getElementById('app-container').innerHTML =
-      '<p style="text-align:center;padding:40px;color:#a09070">Erro ao carregar o app. <a href="login.html" style="color:#c9a84c">Tentar novamente</a></p>';
-  }
+  // Redirecionar direto para o app — sem iframe, sem fetch
+  // Isso preserva o localStorage e evita todos os problemas de cache
+  window.location.href = 'presenca-viva-app.html';
 }
 
 async function doLogout() {
