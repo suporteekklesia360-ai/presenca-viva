@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Entrar — Presença Viva</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--gold:#c9a84c;--gold-light:#e8cc7e;--dark:#0a0d14;--dark2:#111520;--dark3:#181e2e;--dark4:#222840;--text:#e8e0d0;--text-muted:#a09070;--text-dim:#5a5040;--r:12px}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -17,35 +16,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cruz::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:5px;height:100%;background:var(--gold);border-radius:3px}
 .cruz::after{content:'';position:absolute;left:0;top:11px;width:100%;height:5px;background:var(--gold);border-radius:3px}
 .logo h1{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-light);letter-spacing:.06em}
-.tabs{display:flex;background:var(--dark3);border-radius:10px;padding:3px;margin-bottom:24px}
-.tab-btn{flex:1;padding:10px 8px;border:none;background:none;color:var(--text-muted);font-family:'Lato',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;border-radius:8px;transition:all .25s}
-.tab-btn.on{background:rgba(201,168,76,.18);color:var(--gold)}
-.form-block{display:none}
-.form-block.on{display:block}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:.74rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:5px}
-.field input{width:100%;background:var(--dark3);border:1.5px solid var(--dark4);border-radius:var(--r);padding:12px 14px;color:var(--text);font-size:.95rem;font-family:'Lato',sans-serif;outline:none;transition:border .2s}
+.logo p{font-size:.82rem;color:var(--text-muted);margin-top:6px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.74rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:6px}
+.field input{width:100%;background:var(--dark3);border:1.5px solid var(--dark4);border-radius:var(--r);padding:13px 14px;color:var(--text);font-size:.95rem;font-family:'Lato',sans-serif;outline:none;transition:border .2s}
 .field input:focus{border-color:var(--gold)}
 .field input::placeholder{color:var(--text-dim)}
 .btn-main{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:var(--r);padding:14px;font-size:1rem;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;margin-top:4px;transition:all .2s}
 .btn-main:hover{filter:brightness(1.08)}
 .btn-main:disabled{opacity:.6;cursor:not-allowed}
-.or{text-align:center;color:var(--text-dim);font-size:.82rem;margin:16px 0;position:relative}
-.or::before,.or::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--dark4)}
-.or::before{left:0}.or::after{right:0}
-.btn-google{width:100%;background:var(--dark3);border:1.5px solid var(--dark4);border-radius:var(--r);padding:12px;color:var(--text);font-family:'Lato',sans-serif;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
-.btn-google:hover{border-color:rgba(201,168,76,.3)}
-.g-ico{width:20px;height:20px;flex-shrink:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E") no-repeat center/contain}
 .msg{border-radius:8px;padding:12px 14px;font-size:.88rem;margin-bottom:14px;display:none}
-.msg.err{background:rgba(156,90,106,.15);border:1px solid rgba(156,90,106,.3);color:#e0909a}
-.msg.ok{background:rgba(74,140,106,.15);border:1px solid rgba(74,140,106,.3);color:#7dc49a}
-.forgot-link{text-align:right;margin:-6px 0 12px;font-size:.82rem}
-.forgot-link a{color:var(--text-dim);text-decoration:none}
-.forgot-link a:hover{color:var(--gold)}
+.msg.err{background:rgba(156,90,106,.15);border:1px solid rgba(156,90,106,.3);color:#e0909a;display:block}
+.msg.ok{background:rgba(74,140,106,.15);border:1px solid rgba(74,140,106,.3);color:#7dc49a;display:block}
 .back{text-align:center;margin-top:18px;font-size:.85rem;color:var(--text-dim)}
 .back a{color:var(--gold);text-decoration:none}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--dark);border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes sp{to{transform:rotate(360deg)}}
+.tabs{display:flex;background:var(--dark3);border-radius:10px;padding:3px;margin-bottom:24px}
+.tab-btn{flex:1;padding:10px 8px;border:none;background:none;color:var(--text-muted);font-family:'Lato',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;border-radius:8px;transition:all .25s}
+.tab-btn.on{background:rgba(201,168,76,.18);color:var(--gold)}
+.form-block{display:none}
+.form-block.on{display:block}
+.divider{text-align:center;color:var(--text-dim);font-size:.8rem;margin:16px 0;position:relative}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--dark4)}
+.divider::before{left:0}.divider::after{right:0}
+.code-hint{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:8px;padding:10px 12px;font-size:.82rem;color:var(--text-muted);margin-bottom:14px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -53,134 +48,169 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="logo">
     <div class="cruz"></div>
     <h1>Presença Viva</h1>
+    <p>Aprofunde sua caminhada com Deus</p>
   </div>
 
   <div id="msg" class="msg"></div>
 
   <div class="tabs">
-    <button class="tab-btn on" id="t-login" onclick="trocarAba('login')">Entrar</button>
-    <button class="tab-btn" id="t-cadastro" onclick="trocarAba('cadastro')">Criar conta</button>
+    <button class="tab-btn on" onclick="showTab('entrar',this)">Entrar</button>
+    <button class="tab-btn" onclick="showTab('criar',this)">Criar conta</button>
   </div>
 
   <!-- ENTRAR -->
-  <div id="f-login" class="form-block on">
-    <div class="field"><label>Email</label><input type="email" id="l-email" placeholder="seu@email.com"></div>
-    <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"></div>
-    <div class="forgot-link"><a href="#" onclick="esqueciSenha(event)">Esqueci minha senha</a></div>
-    <button class="btn-main" id="btn-entrar" onclick="entrar()">Entrar na Presença</button>
-    <div class="or">ou</div>
-    <button class="btn-google" onclick="entrarGoogle()"><div class="g-ico"></div>Entrar com Google</button>
+  <div class="form-block on" id="form-entrar">
+    <div class="field">
+      <label>Seu nome</label>
+      <input id="login-name" type="text" placeholder="Como você se chama...">
+    </div>
+    <div class="field">
+      <label>Código de acesso</label>
+      <input id="login-code" type="password" placeholder="Código recebido...">
+    </div>
+    <button class="btn-main" onclick="doLogin()" id="btn-login">Entrar na Presença →</button>
+    <div class="divider">ou</div>
+    <div class="code-hint">
+      💬 Não tem código ainda? Fale com o suporte:<br>
+      <strong style="color:var(--gold)">wa.me/5534984314362</strong>
+    </div>
   </div>
 
   <!-- CRIAR CONTA -->
-  <div id="f-cadastro" class="form-block">
-    <div class="field"><label>Seu nome</label><input type="text" id="c-nome" placeholder="Como quer ser chamado(a)"></div>
-    <div class="field"><label>Email</label><input type="email" id="c-email" placeholder="seu@email.com"></div>
-    <div class="field"><label>Senha</label><input type="password" id="c-senha" placeholder="Mínimo 6 caracteres"></div>
-    <button class="btn-main" id="btn-cadastrar" onclick="cadastrar()">Criar minha conta</button>
-    <div class="or">ou</div>
-    <button class="btn-google" onclick="entrarGoogle()"><div class="g-ico"></div>Continuar com Google</button>
+  <div class="form-block" id="form-criar">
+    <div class="field">
+      <label>Seu nome</label>
+      <input id="reg-name" type="text" placeholder="Seu nome completo...">
+    </div>
+    <div class="field">
+      <label>Seu WhatsApp</label>
+      <input id="reg-phone" type="tel" placeholder="(34) 99999-9999">
+    </div>
+    <div class="field">
+      <label>Código de indicação (opcional)</label>
+      <input id="reg-ref" type="text" placeholder="PV-000001" style="text-transform:uppercase">
+    </div>
+    <button class="btn-main" onclick="doRegister()" id="btn-register">Solicitar Acesso →</button>
+    <div class="code-hint" style="margin-top:14px">
+      ✦ Após enviar, entraremos em contato pelo WhatsApp com seu código de acesso.
+    </div>
   </div>
 
   <div class="back"><a href="index.html">← Voltar ao site</a></div>
 </div>
 
 <script>
-const SUPA_URL = 'https://riiabvygpggittrthqiy.supabase.co';
-const SUPA_KEY = 'sb_publishable_Tw-cSUMdG4Kxi1Nb4gVegg_m9IqZIvs';
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+// ══════════════════════════════════════
+// SISTEMA DE ACESSO — SEM SUPABASE
+// Código mestre do admin + códigos de usuários
+// ══════════════════════════════════════
 
-// Verificar se já está logado (sem onAuthStateChange que causa loop)
-sb.auth.getSession().then(({data:{session}}) => {
-  if (session) window.location.href = 'app.html';
-});
+// CÓDIGO DO ADMIN (você, Wemerson)
+const ADMIN_CODE = 'EKKLESIA2025';
+const ADMIN_NAME_KEY = 'wemerson';
 
-function trocarAba(aba) {
-  // Tabs
-  document.getElementById('t-login').classList.toggle('on', aba === 'login');
-  document.getElementById('t-cadastro').classList.toggle('on', aba === 'cadastro');
-  // Formulários
-  document.getElementById('f-login').classList.toggle('on', aba === 'login');
-  document.getElementById('f-cadastro').classList.toggle('on', aba === 'cadastro');
-  esconderMsg();
+// Códigos de usuários ativos — você adiciona aqui quando libera acesso
+// Formato: { codigo: 'PV-000001', nome: 'João Silva', ativo: true }
+// VOCÊ PODE EDITAR ESSA LISTA DIRETAMENTE AQUI
+const CODIGOS_ATIVOS = [
+  { code: 'EKKLESIA2025', name: 'Admin', admin: true },
+  // Adicione mais códigos conforme for liberando:
+  // { code: 'PV-000001', name: '', admin: false },
+  // { code: 'PV-000002', name: '', admin: false },
+];
+
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.form-block').forEach(f => f.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('form-' + tab).classList.add('on');
+  clearMsg();
 }
 
-function mostrarMsg(texto, tipo) {
-  const el = document.getElementById('msg');
-  el.textContent = texto;
-  el.className = 'msg ' + tipo;
-  el.style.display = 'block';
-}
-function esconderMsg() {
-  document.getElementById('msg').style.display = 'none';
-}
-function setCarregando(btnId, carregando, textoOriginal) {
-  const btn = document.getElementById(btnId);
-  btn.disabled = carregando;
-  btn.innerHTML = carregando ? '<span class="spin"></span>Aguarde...' : textoOriginal;
+function showMsg(text, type) {
+  const m = document.getElementById('msg');
+  m.textContent = text;
+  m.className = 'msg ' + type;
 }
 
-async function entrar() {
-  const email = document.getElementById('l-email').value.trim();
-  const senha = document.getElementById('l-senha').value;
-  if (!email || !senha) { mostrarMsg('Preencha email e senha.', 'err'); return; }
-  setCarregando('btn-entrar', true, 'Entrar na Presença');
-  const { error } = await sb.auth.signInWithPassword({ email, password: senha });
-  setCarregando('btn-entrar', false, 'Entrar na Presença');
-  if (error) {
-    const msgs = {
-      'Invalid login credentials': 'Email ou senha incorretos.',
-      'Email not confirmed': 'Confirme seu email antes de entrar. Verifique sua caixa de entrada.',
-    };
-    mostrarMsg(msgs[error.message] || 'Erro: ' + error.message, 'err');
-  } else {
-    window.location.href = 'app.html';
-  }
+function clearMsg() {
+  const m = document.getElementById('msg');
+  m.className = 'msg';
+  m.textContent = '';
 }
 
-async function cadastrar() {
-  const nome = document.getElementById('c-nome').value.trim();
-  const email = document.getElementById('c-email').value.trim();
-  const senha = document.getElementById('c-senha').value;
-  if (!nome || !email || !senha) { mostrarMsg('Preencha todos os campos.', 'err'); return; }
-  if (senha.length < 6) { mostrarMsg('A senha precisa ter pelo menos 6 caracteres.', 'err'); return; }
-  setCarregando('btn-cadastrar', true, 'Criar minha conta');
-  const { error } = await sb.auth.signUp({
-    email, password: senha,
-    options: { data: { name: nome } }
-  });
-  setCarregando('btn-cadastrar', false, 'Criar minha conta');
-  if (error) {
-    mostrarMsg('Erro: ' + error.message, 'err');
-  } else {
-    mostrarMsg('✓ Conta criada! Verifique seu email para confirmar o cadastro.', 'ok');
-  }
+function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const code = document.getElementById('login-code').value.trim().toUpperCase();
+
+  if (!name) { showMsg('Digite seu nome.', 'err'); return; }
+  if (!code) { showMsg('Digite seu código de acesso.', 'err'); return; }
+
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Verificando...';
+
+  // Verifica o código
+  setTimeout(() => {
+    const found = CODIGOS_ATIVOS.find(c => c.code === code);
+
+    if (found) {
+      // Código válido — salva sessão e vai pro app
+      sessionStorage.setItem('pv_user_name', name);
+      sessionStorage.setItem('pv_user_code', code);
+      sessionStorage.setItem('pv_user_admin', found.admin ? '1' : '0');
+      sessionStorage.setItem('pv_user_email', code + '@presencaviva.app');
+
+      showMsg('✦ Bem-vindo(a), ' + name + '!', 'ok');
+      setTimeout(() => {
+        window.location.href = 'presenca-viva-app.html';
+      }, 800);
+    } else {
+      showMsg('Código inválido. Verifique com o suporte.', 'err');
+      btn.disabled = false;
+      btn.innerHTML = 'Entrar na Presença →';
+    }
+  }, 600);
 }
 
-async function entrarGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin + '/app.html' }
-  });
-  if (error) mostrarMsg('Erro ao entrar com Google: ' + error.message, 'err');
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const ref = document.getElementById('reg-ref').value.trim().toUpperCase();
+
+  if (!name) { showMsg('Digite seu nome.', 'err'); return; }
+  if (!phone) { showMsg('Digite seu WhatsApp.', 'err'); return; }
+
+  const btn = document.getElementById('btn-register');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Enviando...';
+
+  // Monta mensagem para WhatsApp
+  const msg = encodeURIComponent(
+    '🙏 *Nova solicitação de acesso — Presença Viva*\n\n' +
+    '*Nome:* ' + name + '\n' +
+    '*WhatsApp:* ' + phone + '\n' +
+    (ref ? '*Código de indicação:* ' + ref + '\n' : '') +
+    '\nPor favor, gostaria de ter acesso ao Presença Viva.'
+  );
+
+  setTimeout(() => {
+    showMsg('✦ Redirecionando para o WhatsApp...', 'ok');
+    setTimeout(() => {
+      window.open('https://wa.me/5534984314362?text=' + msg, '_blank');
+      btn.disabled = false;
+      btn.innerHTML = 'Solicitar Acesso →';
+    }, 800);
+  }, 600);
 }
 
-async function esqueciSenha(e) {
-  e.preventDefault();
-  const email = document.getElementById('l-email').value.trim();
-  if (!email) { mostrarMsg('Digite seu email no campo acima primeiro.', 'err'); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/login.html'
-  });
-  if (error) mostrarMsg('Erro: ' + error.message, 'err');
-  else mostrarMsg('Email de recuperação enviado! Verifique sua caixa de entrada.', 'ok');
-}
-
-// Suporte ao Enter
+// Enter para entrar
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  if (document.getElementById('f-login').classList.contains('on')) entrar();
-  else cadastrar();
+  if (e.key === 'Enter') {
+    const tab = document.querySelector('.form-block.on');
+    if (tab && tab.id === 'form-entrar') doLogin();
+    if (tab && tab.id === 'form-criar') doRegister();
+  }
 });
 </script>
 </body>
