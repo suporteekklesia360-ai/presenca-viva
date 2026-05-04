@@ -1734,20 +1734,17 @@ const ST = {
 function save(){try{localStorage.setItem('pv2',JSON.stringify(ST));}catch(e){}}
 function load(){try{const s=localStorage.getItem('pv2');if(s)Object.assign(ST,JSON.parse(s));}catch(e){}}
 
-// ════════════════ ONBOARDING ════════════════
-let obStep=0;
-const OB_TOTAL=8;
-function renderObProg(){
-  const p=document.getElementById('ob-prog');if(!p)return;
-  p.innerHTML=Array.from({length:OB_TOTAL},(_,i)=>`<div class="ob-dot ${i<=obStep?'done':''}"></div>`).join('');
-}
-function selOpt(el,v){el.closest('.ob-options').querySelectorAll('.ob-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');ST.profile['step'+obStep]=v;}
-// ════════════════ CÓDIGOS DE ACESSO ════════════════
-const CODIGOS_VALIDOS = [
-  'EKKLESIA2025',
-  // Adicione novos códigos aqui conforme for liberando:
-  // 'PV-000001','PV-000002',
-];
+// ════════════════ ONBOARDING NAVIGATION (definido abaixo) ════════════════
+let obStep=0; // mantido para compatibilidade
+function renderObProg(){const p=document.getElementById('ob-prog');if(!p)return;const total=OB_STEPS?OB_STEPS.length:8;const cur=obCurrentStep>=0?obCurrentStep:0;p.innerHTML=Array.from({length:total},(_,i)=>'<div class="ob-dot '+(i<=cur?'done':'')+'"></div>').join('');}
+// ════════════════ ONBOARDING NAVIGATION ════════════════
+const CODIGOS_VALIDOS = ['EKKLESIA2025'];
+// Adicione códigos de usuários aqui: 'PV-000001','PV-000002', etc
+
+// IDs dos steps em ordem
+const OB_STEPS = ['step-0','step-1','step-2','step-3','step-4','step-5','step-6','step-7'];
+let obCurrentStep = -1; // -1 = tela de acesso
+
 function verifyAccess(){
   const name = (document.getElementById('access-name').value||'').trim();
   const code = (document.getElementById('access-code').value||'').trim().toUpperCase();
@@ -1756,41 +1753,64 @@ function verifyAccess(){
   if(!name){errEl.textContent='Digite seu nome.';errEl.style.display='block';return;}
   if(!code){errEl.textContent='Digite seu código de acesso.';errEl.style.display='block';return;}
 
-  if(CODIGOS_VALIDOS.includes(code)){
+  if(CODIGOS_VALIDOS.indexOf(code) >= 0){
     errEl.style.display='none';
-    // Salva nome temporariamente e avança para o onboarding
     sessionStorage.setItem('pv_access_name', name);
     sessionStorage.setItem('pv_access_code', code);
-    // Vai para step-0 (pular step-access)
+    // Vai para o primeiro step do onboarding
     document.getElementById('step-access').classList.remove('active');
-    obStep = 1; // começa no step-0
-    document.getElementById('step-0').classList.add('active');
+    obCurrentStep = 0;
+    document.getElementById(OB_STEPS[0]).classList.add('active');
     window.scrollTo(0,0);
+    renderObProg();
   } else {
-    errEl.textContent='Código inválido. Verifique com o suporte: wa.me/5534984314362';
-    errEl.style.display='block';
+    errEl.textContent = 'Código inválido. Fale com o suporte: wa.me/5534984314362';
+    errEl.style.display = 'block';
   }
 }
+
 function nextStep(){
-  const steps=document.querySelectorAll('.ob-step:not(#step-access)');
-  const currentIdx=obStep-1;
-  if(steps[currentIdx])steps[currentIdx].classList.remove('active');
-  obStep++;
-  const nextIdx=obStep-1;
-  if(nextIdx<steps.length){steps[nextIdx].classList.add('active');window.scrollTo(0,0);renderObProg();}
+  if(obCurrentStep < 0 || obCurrentStep >= OB_STEPS.length) return;
+  // Esconde step atual
+  document.getElementById(OB_STEPS[obCurrentStep]).classList.remove('active');
+  obCurrentStep++;
+  // Mostra próximo
+  if(obCurrentStep < OB_STEPS.length){
+    document.getElementById(OB_STEPS[obCurrentStep]).classList.add('active');
+    window.scrollTo(0,0);
+    renderObProg();
+  }
 }
+
+function selOpt(el,v){
+  el.closest('.ob-options').querySelectorAll('.ob-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  ST.profile['step'+obCurrentStep]=v;
+}
+
+function renderObProg(){
+  const p=document.getElementById('ob-prog');if(!p)return;
+  const total = OB_STEPS.length;
+  p.innerHTML=Array.from({length:total},(_,i)=>'<div class="ob-dot '+(i<=obCurrentStep?'done':'')+'"></div>').join('');
+}
+
 function finishOB(){
-  // Pega nome do step de acesso ou do campo (compatibilidade)
   const accessName = sessionStorage.getItem('pv_access_name')||'';
-  const name = accessName || (document.getElementById('ob-name')?document.getElementById('ob-name').value.trim():'') || 'amado(a)';
-  const bday=document.getElementById('ob-birthday')?document.getElementById('ob-birthday').value||'':'';
-  const genderSel=ST.profile['step6']||'';
-  ST.name=name;ST.birthday=bday;
-  ST.gender=genderSel==='male'?'male':(genderSel==='female'?'female':'');
-  ST.xp=50;save();
+  const name = accessName || 'amado(a)';
+  const bday = document.getElementById('ob-birthday') ? document.getElementById('ob-birthday').value||'' : '';
+  const genderSel = ST.profile['step5']||ST.profile['step6']||'';
+  ST.name = name;
+  ST.birthday = bday;
+  ST.gender = genderSel==='male'?'male':(genderSel==='female'?'female':'');
+  ST.xp = 50;
+  save();
   document.getElementById('onboarding').style.display='none';
-  const app=document.getElementById('app');app.style.display='flex';app.style.flexDirection='column';
-  initApp();showToast('Bem-vindo(a), '+name+'! +50 XP 🎉');
+  const app=document.getElementById('app');
+  app.style.display='flex';
+  app.style.flexDirection='column';
+  initApp();
+  showToast('Bem-vindo(a), '+name+'! +50 XP 🎉');
+  setTimeout(()=>showGodToast('Que alegria te ver aqui, '+name+'. Sabia que estava esperando por você? Vamos começar.'), 2000);
 }
 
 // ════════════════ SIDEBAR ════════════════
