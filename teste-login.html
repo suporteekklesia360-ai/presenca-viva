@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teste Login</title>
+<style>
+body{background:#0a0d14;color:#e8d9b5;font-family:sans-serif;padding:24px;max-width:400px;margin:0 auto}
+input{width:100%;background:#181e2e;border:1px solid #333;border-radius:8px;padding:12px;color:#fff;font-size:1rem;margin-bottom:12px;box-sizing:border-box}
+button{width:100%;background:#c9a84c;color:#0a0d14;border:none;border-radius:8px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer}
+#log{margin-top:16px;background:#111;border-radius:8px;padding:12px;font-size:.8rem;white-space:pre-wrap;min-height:100px;color:#7dc49a}
+</style>
+</head>
+<body>
+<h2 style="color:#c9a84c">Teste de Login</h2>
+<input id="nome" placeholder="Seu nome" value="Wemerson">
+<input id="codigo" placeholder="Código" value="EKKLESIA2025">
+<button onclick="testar()">Testar</button>
+<div id="log">Aguardando...</div>
+
+<script>
+var CODIGOS = ['EKKLESIA2025'];
+var log = document.getElementById('log');
+
+function addLog(msg) {
+  log.textContent += '\n' + msg;
+}
+
+function testar() {
+  log.textContent = 'Iniciando teste...';
+  
+  var nome = document.getElementById('nome').value.trim();
+  var codigo = document.getElementById('codigo').value.trim().toUpperCase();
+  
+  addLog('Nome: ' + nome);
+  addLog('Código: ' + codigo);
+  
+  // Testa validação
+  var valido = CODIGOS.indexOf(codigo) >= 0;
+  addLog('Código válido: ' + valido);
+  
+  // Testa localStorage
+  try {
+    localStorage.setItem('pv_teste', nome);
+    var lido = localStorage.getItem('pv_teste');
+    addLog('localStorage OK: ' + lido);
+  } catch(e) {
+    addLog('localStorage ERRO: ' + e.message);
+  }
+  
+  // Testa sessionStorage
+  try {
+    sessionStorage.setItem('pv_teste', nome);
+    var lido2 = sessionStorage.getItem('pv_teste');
+    addLog('sessionStorage OK: ' + lido2);
+  } catch(e) {
+    addLog('sessionStorage ERRO: ' + e.message);
+  }
+  
+  // Testa JSON
+  try {
+    var obj = {name: nome, xp: 0};
+    localStorage.setItem('pv2', JSON.stringify(obj));
+    var lido3 = JSON.parse(localStorage.getItem('pv2'));
+    addLog('pv2 salvo OK: ' + lido3.name);
+  } catch(e) {
+    addLog('pv2 ERRO: ' + e.message);
+  }
+  
+  if(valido) {
+    addLog('\n✅ TUDO OK! Redirecionando...');
+    setTimeout(function(){
+      window.location.href = 'presenca-viva-app.html?nome=' + encodeURIComponent(nome) + '&code=' + encodeURIComponent(codigo);
+    }, 1500);
+  } else {
+    addLog('\n❌ Código inválido');
+  }
+}
+
+// Checa se ja tem dados salvos
+try {
+  var saved = localStorage.getItem('pv2');
+  if(saved) {
+    var d = JSON.parse(saved);
+    addLog('Dados ja salvos: nome=' + (d.name||'vazio'));
+  } else {
+    addLog('Nenhum dado salvo no localStorage');
+  }
+} catch(e) {
+  addLog('Erro ao ler localStorage: ' + e);
+}
+</script>
+</body>
+</html>
