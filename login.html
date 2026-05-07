@@ -163,7 +163,7 @@ function doLogin() {
 
       showMsg('✦ Bem-vindo(a), ' + name + '!', 'ok');
       setTimeout(() => {
-        window.location.href = 'presenca-viva-app.html';
+        window.location.href = 'presenca-viva-app.html?nome=' + encodeURIComponent(name) + '&code=' + encodeURIComponent(code);
       }, 800);
     } else {
       showMsg('Código inválido. Verifique com o suporte.', 'err');
