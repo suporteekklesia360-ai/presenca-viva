@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presença Viva — Entrar</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0d14;color:#e8d9b5;font-family:'Lato',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:100%;max-width:380px}
+.logo{text-align:center;margin-bottom:32px}
+.cruz{font-size:2rem;color:#c9a84c;display:block;margin-bottom:8px}
+h1{font-size:1.4rem;color:#e8cc7e;letter-spacing:.05em;font-weight:700}
+p{color:#a09070;font-size:.85rem;margin-top:4px}
+label{display:block;font-size:.72rem;color:#a09070;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:6px;margin-top:14px}
+input{width:100%;background:#181e2e;border:1.5px solid #222840;border-radius:10px;padding:13px 14px;color:#e8e0d0;font-size:.95rem;outline:none;transition:border .2s}
+input:focus{border-color:#c9a84c}
+.btn{width:100%;background:linear-gradient(135deg,#c9a84c,#e8cc7e);color:#0a0d14;border:none;border-radius:10px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:18px;transition:all .2s}
+.btn:disabled{opacity:.6}
+.err{background:rgba(156,90,106,.15);border:1px solid rgba(156,90,106,.3);color:#e0909a;border-radius:8px;padding:10px 12px;font-size:.85rem;margin-top:12px;display:none}
+.hint{text-align:center;margin-top:16px;font-size:.82rem;color:#5a5040}
+.hint a{color:#c9a84c;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">
+    <span class="cruz">✦</span>
+    <h1>Presença Viva</h1>
+    <p>Aprofunde sua caminhada com Deus</p>
+  </div>
+  <label>Como posso te chamar?</label>
+  <input id="nome" type="text" placeholder="Seu nome..." autocomplete="name">
+  <label>Código de acesso</label>
+  <input id="codigo" type="text" placeholder="Ex: EKKLESIA2025" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()" autocomplete="off">
+  <div class="err" id="err"></div>
+  <button class="btn" id="btn" onclick="entrar()">Entrar na Presença →</button>
+  <div class="hint">Não tem código? <a href="https://wa.me/5534984314362" target="_blank">Fale com o suporte</a></div>
+</div>
+
+<script>
+var CODIGOS = ['EKKLESIA2025'];
+// Adicione mais códigos aqui:
+// var CODIGOS = ['EKKLESIA2025','PV-000001','PV-000002'];
+
+// Se já tem nome salvo, vai direto pro app
+try {
+  var saved = localStorage.getItem('pv2');
+  if (saved) {
+    var d = JSON.parse(saved);
+    if (d && d.name && d.name.length > 0) {
+      window.location.replace('presenca-viva-app.html');
+    }
+  }
+} catch(e) {}
+
+function entrar() {
+  var nome = (document.getElementById('nome').value || '').trim();
+  var codigo = (document.getElementById('codigo').value || '').trim().toUpperCase();
+  var err = document.getElementById('err');
+  var btn = document.getElementById('btn');
+
+  err.style.display = 'none';
+  if (!nome) { err.textContent = 'Digite seu nome.'; err.style.display = 'block'; return; }
+  if (!codigo) { err.textContent = 'Digite seu código de acesso.'; err.style.display = 'block'; return; }
+
+  var valido = CODIGOS.indexOf(codigo) >= 0;
+  if (!valido) { err.textContent = 'Código inválido. Verifique e tente novamente.'; err.style.display = 'block'; return; }
+
+  btn.textContent = '✦ Entrando...';
+  btn.disabled = true;
+
+  // Salva o nome em múltiplos lugares
+  try {
+    var dados = {name: nome, xp: 0, level: 1, profile: {}, birthday: '', gender: '',
+      missionsCompleted: [], missionFields: {}, missionActive: {}, missionDays: {},
+      fastingActive: {}, fastingDaysDone: {}, fastingNotes: {}, fastingType: {},
+      finEntries: [], finBudget: {}, finGoals: [], finMissions: [],
+      dreams: [], conquests: [], conquestMissions: [], promises: [],
+      relationshipData: {}, childrenData: {}, ministryData: {},
+      bibleNotes: [], readChapters: {}, readingPlan: {plan: 'cronologico', daysRead: []},
+      prayerRequests: [], devotRead: {}, devotDeclarations: {}, devotGodNotes: {},
+      confessionsDeclared: [], godLetters: [], familyMembers: [], familyEvents: {},
+      referralCodes: [], discountPercent: 0, agendaEvents: [], agendaTab: 'pessoal'};
+    localStorage.setItem('pv2', JSON.stringify(dados));
+    localStorage.setItem('pv_name_backup', nome);
+  } catch(e) {
+    console.error('Erro ao salvar:', e);
+  }
+
+  // Redireciona para o app
+  setTimeout(function() {
+    window.location.href = 'presenca-viva-app.html';
+  }, 400);
+}
+
+// Enter key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') entrar();
+});
+</script>
+</body>
+</html>
