@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presença Viva</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0d14;font-family:sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:100%;max-width:360px}
+.logo{text-align:center;margin-bottom:32px}
+.star{font-size:2.5rem;color:#c9a84c;display:block;margin-bottom:10px}
+h1{font-size:1.6rem;color:#e8cc7e;font-weight:700;margin-bottom:4px}
+p{color:#a09070;font-size:.9rem}
+.card{background:#111520;border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:28px 24px}
+label{display:block;font-size:.72rem;color:#a09070;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px;margin-top:16px}
+label:first-of-type{margin-top:0}
+input{width:100%;background:#181e2e;border:1.5px solid #222840;border-radius:10px;padding:13px 14px;color:#e8e0d0;font-size:1rem;outline:none;-webkit-appearance:none}
+input:focus{border-color:#c9a84c}
+.btn{display:block;width:100%;background:#c9a84c;color:#0a0d14;border:none;border-radius:10px;padding:15px;font-size:1rem;font-weight:700;margin-top:20px;cursor:pointer;-webkit-appearance:none}
+.err{background:rgba(200,80,80,.1);border:1px solid rgba(200,80,80,.3);color:#f08080;border-radius:8px;padding:10px 12px;font-size:.85rem;margin-top:12px;display:none}
+.suporte{text-align:center;margin-top:16px;font-size:.85rem;color:#5a5040}
+.suporte a{color:#c9a84c;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">
+    <span class="star">✦</span>
+    <h1>Presença Viva</h1>
+    <p>Aprofunde sua caminhada com Deus</p>
+  </div>
+  <div class="card">
+    <label>Seu nome</label>
+    <input id="nome" type="text" placeholder="Como posso te chamar...">
+    <label>Senha</label>
+    <input id="senha" type="password" placeholder="Sua senha de acesso...">
+    <div id="err" class="err"></div>
+    <button class="btn" id="btn" onclick="entrar()">Entrar na Presença →</button>
+  </div>
+  <div class="suporte">Não tem acesso? <a href="https://wa.me/5534984314362">Fale com o suporte</a></div>
+</div>
+<script>
+// SENHAS — adicione aqui para liberar acesso
+var SENHAS = ['ekklesia2025'];
+
+// Se já logou antes, vai direto
+try {
+  var d = JSON.parse(localStorage.getItem('pv2')||'{}');
+  if (d.name && d.name.length > 1) {
+    window.location.replace('presenca-viva-app.html');
+  }
+} catch(e) {}
+
+function entrar() {
+  var nome = (document.getElementById('nome').value || '').trim();
+  var senha = (document.getElementById('senha').value || '').trim().toLowerCase();
+  var err = document.getElementById('err');
+  var btn = document.getElementById('btn');
+  
+  err.style.display = 'none';
+  
+  if (!nome) { err.textContent = 'Digite seu nome.'; err.style.display = 'block'; return; }
+  if (!senha) { err.textContent = 'Digite sua senha.'; err.style.display = 'block'; return; }
+  
+  var ok = false;
+  for (var i = 0; i < SENHAS.length; i++) {
+    if (SENHAS[i] === senha) { ok = true; break; }
+  }
+  
+  if (!ok) { err.textContent = 'Senha incorreta. Fale com o suporte.'; err.style.display = 'block'; return; }
+  
+  btn.textContent = '✦ Entrando...';
+  btn.disabled = true;
+  
+  // Salva dados completos
+  var dados = {
+    name: nome, xp: 0, level: 1, profile: {}, birthday: '', gender: '',
+    missionsCompleted: [], missionFields: {}, missionActive: {}, missionDays: {},
+    fastingActive: {}, fastingDaysDone: {}, fastingNotes: {}, fastingType: {},
+    finEntries: [], finBudget: {}, finGoals: [], finMissions: [],
+    dreams: [], conquests: [], conquestMissions: [], promises: [],
+    relationshipData: {}, childrenData: {}, ministryData: {},
+    bibleNotes: [], readChapters: {}, readingPlan: {plan:'cronologico', daysRead: []},
+    prayerRequests: [], devotRead: {}, devotDeclarations: {}, devotGodNotes: {},
+    confessionsDeclared: [], godLetters: [], familyMembers: [], familyEvents: {},
+    referralCodes: [], discountPercent: 0, agendaEvents: [], agendaTab: 'pessoal'
+  };
+  
+  try { localStorage.setItem('pv2', JSON.stringify(dados)); } catch(e) {}
+  try { localStorage.setItem('pv_name_bk', nome); } catch(e) {}
+  
+  setTimeout(function() {
+    window.location.href = 'presenca-viva-app.html';
+  }, 300);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') entrar();
+});
+</script>
+</body>
+</html>
