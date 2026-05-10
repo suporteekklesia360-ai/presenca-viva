@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Presenca Viva</title>
+</head>
+<body style="background:#0a0d14;color:#e8d9b5;font-family:Arial,sans-serif;padding:30px 20px;max-width:380px;margin:0 auto">
+
+<div style="text-align:center;margin-bottom:30px">
+  <div style="font-size:2rem;color:#c9a84c">✦</div>
+  <h1 style="color:#e8cc7e;font-size:1.5rem;margin:8px 0 4px">Presenca Viva</h1>
+  <p style="color:#a09070;font-size:.85rem">Aprofunde sua caminhada com Deus</p>
+</div>
+
+<div style="background:#111520;border:1px solid #2a3040;border-radius:12px;padding:24px">
+  <p style="color:#a09070;font-size:.75rem;text-transform:uppercase;margin-bottom:6px">Seu nome</p>
+  <input id="n" type="text" placeholder="Como posso te chamar..."
+    style="width:100%;padding:13px;background:#181e2e;border:1px solid #2a3040;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:14px;box-sizing:border-box;-webkit-appearance:none">
+  
+  <p style="color:#a09070;font-size:.75rem;text-transform:uppercase;margin-bottom:6px">Senha</p>
+  <input id="s" type="password" placeholder="Sua senha..."
+    style="width:100%;padding:13px;background:#181e2e;border:1px solid #2a3040;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:16px;box-sizing:border-box;-webkit-appearance:none">
+  
+  <div id="e" style="background:#400;color:#f88;border-radius:6px;padding:10px;font-size:.9rem;margin-bottom:12px;display:none"></div>
+  
+  <button id="b" type="button"
+    style="width:100%;padding:14px;background:#c9a84c;color:#000;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;-webkit-appearance:none;-webkit-tap-highlight-color:transparent"
+    onclick="ir()">
+    Entrar na Presenca
+  </button>
+</div>
+
+<p style="text-align:center;margin-top:14px;font-size:.82rem;color:#5a5040">
+  Sem acesso? <a href="https://wa.me/5534984314362" style="color:#c9a84c">Fale com o suporte</a>
+</p>
+
+<script type="text/javascript">
+function ir() {
+  var n = document.getElementById('n').value;
+  var s = document.getElementById('s').value;
+  var e = document.getElementById('e');
+  var b = document.getElementById('b');
+  
+  n = n ? n.trim() : '';
+  s = s ? s.trim().toLowerCase() : '';
+  
+  if (n.length < 1) {
+    e.textContent = 'Digite seu nome';
+    e.style.display = 'block';
+    return;
+  }
+  if (s.length < 1) {
+    e.textContent = 'Digite a senha';
+    e.style.display = 'block';
+    return;
+  }
+  if (s !== 'ekklesia2025') {
+    e.textContent = 'Senha incorreta';
+    e.style.display = 'block';
+    return;
+  }
+  
+  e.style.background = '#040';
+  e.style.color = '#8f8';
+  e.textContent = 'Aguarde...';
+  e.style.display = 'block';
+  b.textContent = 'Entrando...';
+  b.disabled = true;
+  
+  var dados = JSON.stringify({
+    name: n,
+    xp: 0,
+    level: 1,
+    profile: {},
+    birthday: '',
+    gender: '',
+    missionsCompleted: [],
+    missionFields: {},
+    missionActive: {},
+    missionDays: {},
+    fastingActive: {},
+    fastingDaysDone: {},
+    fastingNotes: {},
+    fastingType: {},
+    finEntries: [],
+    finBudget: {},
+    finGoals: [],
+    finMissions: [],
+    dreams: [],
+    conquests: [],
+    conquestMissions: [],
+    promises: [],
+    relationshipData: {},
+    childrenData: {},
+    ministryData: {},
+    bibleNotes: [],
+    readChapters: {},
+    readingPlan: {plan: 'cronologico', daysRead: []},
+    prayerRequests: [],
+    devotRead: {},
+    devotDeclarations: {},
+    devotGodNotes: {},
+    confessionsDeclared: [],
+    godLetters: [],
+    familyMembers: [],
+    familyEvents: {},
+    referralCodes: [],
+    discountPercent: 0,
+    agendaEvents: [],
+    agendaTab: 'pessoal'
+  });
+  
+  try {
+    localStorage.setItem('pv2', dados);
+    localStorage.setItem('pv_name_bk', n);
+    e.textContent = 'Entrando no app...';
+    window.setTimeout(function() {
+      window.location.href = 'presenca-viva-app.html';
+    }, 400);
+  } catch(err) {
+    e.textContent = 'Erro: ' + err.message;
+    e.style.background = '#400';
+    e.style.color = '#f88';
+  }
+}
+</script>
+</body>
+</html>
