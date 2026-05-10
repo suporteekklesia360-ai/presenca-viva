@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presença Viva — Entrar</title>
+</head>
+<body style="background:#0a0d14;color:#fff;font-family:sans-serif;padding:30px;max-width:360px;margin:0 auto">
+<h2 style="color:#c9a84c;margin-bottom:20px">Presença Viva</h2>
+
+<label style="display:block;margin-bottom:5px;color:#aaa">Nome</label>
+<input id="nome" type="text" style="width:100%;padding:12px;background:#181e2e;border:1px solid #333;color:#fff;border-radius:8px;font-size:1rem;margin-bottom:12px;box-sizing:border-box">
+
+<label style="display:block;margin-bottom:5px;color:#aaa">Senha</label>
+<input id="senha" type="password" style="width:100%;padding:12px;background:#181e2e;border:1px solid #333;color:#fff;border-radius:8px;font-size:1rem;margin-bottom:16px;box-sizing:border-box">
+
+<button id="btn" style="width:100%;padding:14px;background:#c9a84c;color:#000;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer" onclick="entrar()">Entrar na Presença</button>
+
+<div id="msg" style="margin-top:12px;padding:10px;border-radius:8px;display:none"></div>
+
+<script>
+function entrar() {
+  var nome = document.getElementById('nome').value.trim();
+  var senha = document.getElementById('senha').value.trim().toLowerCase();
+  var msg = document.getElementById('msg');
+  var btn = document.getElementById('btn');
+  
+  msg.style.display = 'none';
+  
+  if (!nome) {
+    msg.textContent = 'Digite seu nome';
+    msg.style.background = '#500';
+    msg.style.display = 'block';
+    return;
+  }
+  
+  if (!senha) {
+    msg.textContent = 'Digite sua senha';
+    msg.style.background = '#500';
+    msg.style.display = 'block';
+    return;
+  }
+  
+  if (senha !== 'ekklesia2025') {
+    msg.textContent = 'Senha incorreta';
+    msg.style.background = '#500';
+    msg.style.display = 'block';
+    return;
+  }
+  
+  btn.textContent = 'Entrando...';
+  msg.textContent = 'OK! Salvando...';
+  msg.style.background = '#050';
+  msg.style.display = 'block';
+  
+  try {
+    localStorage.setItem('pv2', JSON.stringify({name: nome, xp: 0, level: 1}));
+    msg.textContent = 'Salvo! Redirecionando...';
+  } catch(e) {
+    msg.textContent = 'Erro: ' + e.message;
+    msg.style.background = '#500';
+    return;
+  }
+  
+  setTimeout(function() {
+    window.location.href = 'presenca-viva-app.html';
+  }, 500);
+}
+</script>
+</body>
+</html>
